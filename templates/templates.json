@@ -90,5 +90,75 @@
       "captionColor": "#444",
       "span": "auto"
     }
+  },
+  "rsge_2025": {
+    "displayName": "RSGE — Revista de la Sociedad Geológica de España (2025)",
+    "columns": 2,
+    "fontFamily": "Times New Roman, Times, serif",
+    "baseSizePx": 10,
+    "pageSize": "A4",
+    "marginsMm": [
+      25,
+      20,
+      25,
+      20
+    ],
+    "headings": {
+      "h1": {
+        "size": "1.6em",
+        "weight": 700,
+        "margin": "0.8em 0 0.4em"
+      },
+      "h2": {
+        "size": "1.3em",
+        "weight": 600,
+        "margin": "0.7em 0 0.35em"
+      },
+      "h3": {
+        "size": "1.15em",
+        "weight": 600,
+        "margin": "0.6em 0 0.3em"
+      }
+    },
+    "figure": {
+      "captionSize": "0.9em",
+      "captionColor": "#555",
+      "span": "auto"
+    }
+  },
+  "geogaceta_2025": {
+    "displayName": "Geogaceta (2025)",
+    "columns": 3,
+    "fontFamily": "Times New Roman, Times, serif",
+    "baseSizePx": 10,
+    "pageSize": "A4",
+    "marginsMm": [
+      29,
+      18,
+      29,
+      18
+    ],
+    "headings": {
+      "h1": {
+        "size": "1.55em",
+        "weight": 700,
+        "margin": "0.8em 0 0.4em"
+      },
+      "h2": {
+        "size": "1.25em",
+        "weight": 600,
+        "margin": "0.6em 0 0.3em"
+      },
+      "h3": {
+        "size": "1.1em",
+        "weight": 600,
+        "margin": "0.5em 0 0.25em"
+      }
+    },
+    "figure": {
+      "captionSize": "0.85em",
+      "captionColor": "#555",
+      "span": "auto"
+    }
   }
 }

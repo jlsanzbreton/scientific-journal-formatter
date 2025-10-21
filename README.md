@@ -39,3 +39,38 @@ Las plantillas se guardan en **LocalStorage**, y puedes **exportar/importar** `t
 - Control de imágenes **span 1–N columnas** con UI sobre la previsualización.
 - PWA offline con caché estático.
 - Conector AI opcional para **inferencia de plantilla**.
+# 🧠 SciForm – Scientific Journal Formatter
+
+> **Versión:** 0.1.0  
+> **Tipo:** Progressive Web App (PWA)  
+> **Framework:** Vite 6 + Node 22  
+> **Autor:** José L. Sanz Bretón  
+
+---
+
+## 🧩 Descripción general
+
+**SciForm** es una PWA diseñada para ayudar a los autores científicos a **formatear sus artículos, figuras y referencias** según las plantillas de diferentes revistas académicas.
+
+El usuario puede:
+- Subir texto, figuras y referencias por separado.
+- Elegir la plantilla de una revista.
+- Generar el documento final ya formateado.
+- Descargar o compartir el resultado en PDF, DOCX o LaTeX.
+
+---
+
+## 🗂️ Estructura de carpetas
+scientific-journal-formatter/
+├─ assets/
+│  ├─ icons/        # Iconos generados automáticamente (16–512 px)
+│  └─ logo/         # Máster original y versiones vectoriales
+│     ├─ sciform_master_1024.png
+│     └─ sciform_symbol.svg
+├─ scripts/
+│  └─ generate-icons.mjs  # Script Node para generar iconos con Sharp
+├─ index.html
+├─ manifest.webmanifest   # Configuración PWA
+├─ vite.config.js
+├─ package.json
+└─ README.md
