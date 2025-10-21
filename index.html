@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Scientific Journal Formatter (MVP+Admin)</title>
+  <meta name="description" content="Formatea texto científico con layouts por columnas y plantillas de revista. Incluye editor de plantillas (admin).">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="manifest" href="./manifest.webmanifest">
+</head>
+<body class="bg-neutral-50 text-neutral-900 min-h-screen">
+  <header class="max-w-6xl mx-auto px-4 py-6 flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold">Scientific Journal Formatter <span class="text-neutral-500 text-base">— MVP+Admin</span></h1>
+      <p class="text-sm text-neutral-600 mt-1">Importa .txt/.md/.rtf, columnas, tipografías y plantillas. Admin: crea/edita plantillas y expórtalas.</p>
+    </div>
+    <div class="flex items-center gap-3">
+      <label class="flex items-center gap-2 text-sm">
+        <input id="adminToggle" type="checkbox" class="scale-110">
+        <span>Modo Admin</span>
+      </label>
+      <button id="installBtn" class="hidden px-3 py-2 text-sm rounded-lg border">Instalar PWA</button>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 pb-16">
+    <section class="grid lg:grid-cols-3 gap-4 mb-6">
+      <div class="p-4 bg-white rounded-2xl shadow">
+        <h2 class="font-semibold mb-2">1) Importar</h2>
+        <input id="fileInput" type="file" accept=".txt,.md,.rtf" class="w-full text-sm">
+        <button id="pasteBtn" class="mt-3 w-full bg-neutral-900 text-white rounded-xl px-3 py-2 text-sm">Pegar desde portapapeles</button>
+        <div class="mt-4">
+          <label class="text-sm font-medium">Imágenes (.png/.jpg)</label>
+          <input id="imgInput" type="file" accept="image/png,image/jpeg" multiple class="w-full text-sm mt-1">
+          <p class="text-xs text-neutral-500 mt-1">Inserta con el botón de imagen bajo el editor.</p>
+        </div>
+      </div>
+
+      <div class="p-4 bg-white rounded-2xl shadow">
+        <h2 class="font-semibold mb-2">2) Layout</h2>
+        <label class="text-sm">Columnas</label>
+        <select id="columns" class="mt-1 w-full border rounded-lg px-3 py-2 text-sm">
+          <option value="1">1</option>
+          <option value="2" selected>2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+
+        <label class="text-sm mt-3 block">Tipografía</label>
+        <select id="fontFamily" class="mt-1 w-full border rounded-lg px-3 py-2 text-sm">
+          <option value="Inter, system-ui, sans-serif">Inter</option>
+          <option value="Merriweather, serif">Merriweather</option>
+          <option value="Georgia, serif">Georgia</option>
+          <option value="Times New Roman, Times, serif">Times New Roman</option>
+          <option value="Garamond, serif">Garamond</option>
+          <option value="Helvetica, Arial, sans-serif">Helvetica/Arial</option>
+        </select>
+
+        <label class="text-sm mt-3 block">Tamaño base</label>
+        <input id="baseSize" type="number" min="10" max="20" step="1" value="12" class="mt-1 w-full border rounded-lg px-3 py-2 text-sm">
+
+        <h3 class="font-medium text-sm mt-4">Formato de salida</h3>
+        <label class="block text-sm mt-1">Tamaño de hoja</label>
+        <select id="pageSize" class="w-full border rounded-lg px-3 py-2 text-sm">
+          <option value="A4" selected>A4</option>
+          <option value="Letter">Letter</option>
+        </select>
+
+        <label class="block text-sm mt-2">Nº máx. de páginas</label>
+        <input id="maxPages" type="number" min="1" step="1" value="12" class="w-full border rounded-lg px-3 py-2 text-sm">
+      </div>
+
+      <div class="p-4 bg-white rounded-2xl shadow">
+        <h2 class="font-semibold mb-2">3) Plantillas</h2>
+        <div class="flex items-center gap-2">
+          <select id="templateSelect" class="flex-1 border rounded-lg px-3 py-2 text-sm"></select>
+          <button id="applyTemplate" class="bg-indigo-600 text-white rounded-xl px-3 py-2 text-sm">Aplicar</button>
+        </div>
+        <div class="mt-3 flex items-center gap-2">
+          <button id="importTemplates" class="border rounded-lg px-3 py-1.5 text-sm">Importar JSON</button>
+          <button id="exportTemplates" class="border rounded-lg px-3 py-1.5 text-sm">Exportar JSON</button>
+          <button id="resetTemplates" class="border rounded-lg px-3 py-1.5 text-sm">Restaurar</button>
+        </div>
+
+        <div id="adminPanel" class="hidden mt-4 p-3 border rounded-xl bg-neutral-50">
+          <div class="flex items-center justify-between">
+            <h3 class="font-semibold text-sm">Editor de plantillas (Admin)</h3>
+            <button id="newTemplate" class="text-xs underline">+ Nueva</button>
+          </div>
+          <div class="grid grid-cols-2 gap-2 mt-2">
+            <label class="text-xs">Clave <input id="tplKey" class="w-full border rounded px-2 py-1 text-xs" placeholder="geologica_acta_2025"></label>
+            <label class="text-xs">Nombre visible <input id="tplName" class="w-full border rounded px-2 py-1 text-xs" placeholder="Geologica Acta — 2025"></label>
+            <label class="text-xs">Columnas <input id="tplColumns" type="number" min="1" max="4" value="2" class="w-full border rounded px-2 py-1 text-xs"></label>
+            <label class="text-xs">Font family <input id="tplFont" class="w-full border rounded px-2 py-1 text-xs" placeholder="Merriweather, serif"></label>
+            <label class="text-xs">Base px <input id="tplBase" type="number" value="12" class="w-full border rounded px-2 py-1 text-xs"></label>
+            <label class="text-xs">Page size
+              <select id="tplPage" class="w-full border rounded px-2 py-1 text-xs">
+                <option value="A4">A4</option>
+                <option value="Letter">Letter</option>
+              </select>
+            </label>
+            <label class="text-xs col-span-2">Márgenes (mm) <input id="tplMargins" class="w-full border rounded px-2 py-1 text-xs" placeholder="18,18,18,18"></label>
+            <label class="text-xs col-span-2">Reglas de títulos (JSON)
+              <textarea id="tplHeadings" class="w-full border rounded px-2 py-1 text-xs h-20" placeholder='{"h1":{"size":"1.6em","weight":700},"h2":{"size":"1.3em","weight":600}}'></textarea>
+            </label>
+            <label class="text-xs col-span-2">Estilos de figura (JSON)
+              <textarea id="tplFigure" class="w-full border rounded px-2 py-1 text-xs h-20" placeholder='{"captionSize":"0.9em","captionColor":"#555","span":"auto"}'></textarea>
+            </label>
+          </div>
+          <div class="mt-2 flex items-center gap-2">
+            <button id="saveTemplate" class="bg-neutral-900 text-white rounded px-3 py-1.5 text-xs">Guardar</button>
+            <button id="deleteTemplate" class="border rounded px-3 py-1.5 text-xs">Eliminar</button>
+            <button id="aiSuggest" class="border rounded px-3 py-1.5 text-xs">AI: Sugerir (stub)</button>
+          </div>
+          <p class="text-[11px] text-neutral-500 mt-2">Nota: “AI: Sugerir” es un stub: podrás conectar una API para inferir estilos a partir de una guía o PDF.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid lg:grid-cols-2 gap-4 mb-6">
+      <div class="p-4 bg-white rounded-2xl shadow flex flex-col">
+        <div class="flex items-center gap-2 mb-2">
+          <button id="insertImageBtn" class="px-3 py-1.5 text-sm rounded-lg border">+ Imagen</button>
+          <button id="h1Btn" class="px-3 py-1.5 text-sm rounded-lg border">H1</button>
+          <button id="h2Btn" class="px-3 py-1.5 text-sm rounded-lg border">H2</button>
+          <button id="boldBtn" class="px-3 py-1.5 text-sm rounded-lg border">Negrita</button>
+          <button id="italicBtn" class="px-3 py-1.5 text-sm rounded-lg border">Cursiva</button>
+        </div>
+        <textarea id="editor" class="flex-1 w-full border rounded-lg p-3 text-sm font-mono" placeholder="# Título
+
+Escribe aquí en Markdown o pega tu texto..."></textarea>
+      </div>
+      <div class="p-4 bg-white rounded-2xl shadow">
+        <h2 class="font-semibold mb-2">Previsualización</h2>
+        <div id="previewHost" class="border rounded-xl overflow-hidden">
+          <iframe id="preview" class="w-full h-[640px]" title="Preview"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section class="p-4 bg-white rounded-2xl shadow">
+      <details>
+        <summary class="cursor-pointer font-semibold">Referencias (BibTeX) — opcional</summary>
+        <textarea id="bibtex" class="mt-3 w-full border rounded-lg p-3 text-sm font-mono h-40" placeholder="@article{garcia2023,...}"></textarea>
+      </details>
+    </section>
+  </main>
+
+  <footer class="max-w-6xl mx-auto px-4 py-8 text-xs text-neutral-500">
+    Hecho con ❤️ — MVP estático; no se suben datos al servidor. Modo Admin guarda plantillas en LocalStorage y permite exportar/importar JSON.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

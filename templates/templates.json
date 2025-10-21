@@ -1,0 +1,94 @@
+{
+  "nature_like": {
+    "displayName": "Nature (like) — demo",
+    "columns": 2,
+    "fontFamily": "Merriweather, serif",
+    "baseSizePx": 11,
+    "pageSize": "A4",
+    "marginsMm": [
+      18,
+      18,
+      18,
+      18
+    ],
+    "headings": {
+      "h1": {
+        "size": "1.6em",
+        "weight": 700
+      },
+      "h2": {
+        "size": "1.3em",
+        "weight": 600
+      },
+      "h3": {
+        "size": "1.15em",
+        "weight": 600
+      }
+    },
+    "figure": {
+      "captionSize": "0.9em",
+      "captionColor": "#555",
+      "span": "auto"
+    }
+  },
+  "science_like": {
+    "displayName": "Science (like) — demo",
+    "columns": 2,
+    "fontFamily": "Georgia, serif",
+    "baseSizePx": 10,
+    "pageSize": "Letter",
+    "marginsMm": [
+      18,
+      18,
+      18,
+      18
+    ],
+    "headings": {
+      "h1": {
+        "size": "1.55em",
+        "weight": 700
+      },
+      "h2": {
+        "size": "1.25em",
+        "weight": 600
+      }
+    },
+    "figure": {
+      "captionSize": "0.85em",
+      "captionColor": "#555",
+      "span": "auto"
+    }
+  },
+  "geologica_acta_like": {
+    "displayName": "Geologica Acta — demo",
+    "columns": 2,
+    "fontFamily": "Inter, system-ui, sans-serif",
+    "baseSizePx": 12,
+    "pageSize": "A4",
+    "marginsMm": [
+      20,
+      16,
+      20,
+      16
+    ],
+    "headings": {
+      "h1": {
+        "size": "1.5em",
+        "weight": 700
+      },
+      "h2": {
+        "size": "1.25em",
+        "weight": 600
+      },
+      "h3": {
+        "size": "1.1em",
+        "weight": 600
+      }
+    },
+    "figure": {
+      "captionSize": "0.9em",
+      "captionColor": "#444",
+      "span": "auto"
+    }
+  }
+}
