@@ -128,7 +128,17 @@ export function createTemplateStore() {
   function load() {
     defaultTemplates = cloneDefaultTemplates();
     const stored = loadFromStorage();
-    templates = structuredClone(stored ?? defaultTemplates);
+    if (!stored) {
+      templates = structuredClone(defaultTemplates);
+    } else {
+      const merged = structuredClone(defaultTemplates);
+      Object.entries(stored).forEach(([key, value]) => {
+        const base = merged[key] ? structuredClone(merged[key]) : {};
+        merged[key] = { ...base, ...structuredClone(value) };
+      });
+      assertTemplateMap(merged);
+      templates = merged;
+    }
     return templates;
   }
 

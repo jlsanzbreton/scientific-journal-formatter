@@ -25,6 +25,8 @@ export function setupEditor({ preview, templateStore, assetService }) {
   const columnsSel = qs('#columns');
   const fontFamilySel = qs('#fontFamily');
   const baseSizeInput = qs('#baseSize');
+  const topOffsetRange = qs('#topOffsetRange');
+  const topOffsetNumber = qs('#topOffsetNumber');
   const maxPagesInput = qs('#maxPages');
   const maxPagesDefaultValue = maxPagesInput?.value ?? '';
   const templateSelect = qs('#templateSelect');
@@ -59,6 +61,21 @@ export function setupEditor({ preview, templateStore, assetService }) {
   let currentMargins = [18, 18, 18, 18];
   let currentTemplateKey = null;
   let currentTopOffsetMm = 0;
+
+  function syncTopOffsetControls(value) {
+    const normalized = Math.min(Math.max(Number.isFinite(value) ? value : 0, 0), 80);
+    currentTopOffsetMm = normalized;
+    const strValue = String(normalized);
+    if (topOffsetRange && topOffsetRange.value !== strValue) {
+      topOffsetRange.value = strValue;
+    }
+    if (topOffsetNumber && topOffsetNumber.value !== strValue) {
+      topOffsetNumber.value = strValue;
+    }
+    if (tplContentOffset && tplContentOffset.value !== strValue) {
+      tplContentOffset.value = strValue;
+    }
+  }
 
   function getLayoutState() {
     return {
@@ -117,10 +134,7 @@ export function setupEditor({ preview, templateStore, assetService }) {
     tplMargins.value = (template.marginsMm || [18, 18, 18, 18]).join(', ');
     tplHeadings.value = JSON.stringify(template.headings ?? {}, null, 2);
     tplFigure.value = JSON.stringify(template.figure ?? {}, null, 2);
-    if (tplContentOffset) {
-      tplContentOffset.value =
-        template.contentTopOffsetMm !== undefined ? String(template.contentTopOffsetMm) : '';
-    }
+    syncTopOffsetControls(currentTopOffsetMm);
     if (tplMaxPages) {
       tplMaxPages.value = template.maxPages !== undefined ? String(template.maxPages) : '';
     }
@@ -141,7 +155,9 @@ export function setupEditor({ preview, templateStore, assetService }) {
     }
 
     currentMargins = Array.isArray(template.marginsMm) && template.marginsMm.length === 4 ? template.marginsMm : [18, 18, 18, 18];
-    currentTopOffsetMm = typeof template.contentTopOffsetMm === 'number' ? template.contentTopOffsetMm : 0;
+    syncTopOffsetControls(
+      typeof template.contentTopOffsetMm === 'number' ? template.contentTopOffsetMm : 0
+    );
 
     preview.applyHeadingStyles(template);
     preview.setLayout({ ...getLayoutState(), margins: currentMargins, pageSize: template.pageSize ?? 'A4' });
@@ -219,6 +235,31 @@ export function setupEditor({ preview, templateStore, assetService }) {
   fontFamilySel?.addEventListener('change', updatePreview);
   baseSizeInput?.addEventListener('change', updatePreview);
   pageSizeSel?.addEventListener('change', updatePreview);
+  topOffsetRange?.addEventListener('input', (event) => {
+    syncTopOffsetControls(Number(event.target.value));
+    updatePreview();
+  });
+  topOffsetNumber?.addEventListener('input', (event) => {
+    syncTopOffsetControls(Number(event.target.value));
+    if (topOffsetNumber) {
+      topOffsetNumber.value = String(currentTopOffsetMm);
+    }
+    updatePreview();
+  });
+  tplContentOffset?.addEventListener('input', (event) => {
+    const value = event.target.value.trim();
+    if (value === '') {
+      syncTopOffsetControls(0);
+      updatePreview();
+      return;
+    }
+    const parsed = Number(value);
+    if (!Number.isFinite(parsed) || parsed < 0) {
+      return;
+    }
+    syncTopOffsetControls(parsed);
+    updatePreview();
+  });
 
   fileInput?.addEventListener('change', async (event) => {
     const file = event.target.files?.[0];
@@ -258,11 +299,22 @@ export function setupEditor({ preview, templateStore, assetService }) {
       .getImages()
       .map((asset, index) => `${index + 1}) ${asset.name}`)
       .join('\n');
-    const selection = prompt('Elige imagen (número):\n' + options);
+    const selection = prompt(
+      'Elige imagen (número) y luego indica cuántas columnas debe ocupar.\nListado:\n' + options
+    );
     const idx = Number(selection) - 1;
     const chosen = assetService.getImageByIndex(idx);
     if (!chosen) return;
-    surroundText(`\n\n![Figura](${chosen.url})\n\n`, '');
+    let spanInput = prompt(
+      `¿Cuántas columnas debe ocupar la figura? (1 - ${columnsSel ? columnsSel.value : '2'})`,
+      '1'
+    );
+    let span = Number(spanInput);
+    const maxColumns = Number(columnsSel?.value ?? 2);
+    if (!Number.isInteger(span) || span < 1 || span > maxColumns) {
+      span = 1;
+    }
+    surroundText(`\n\n![Figura|span=${span}](${chosen.url})\n\n`, '');
   });
 
   document.getElementById('h1Btn')?.addEventListener('click', () => surroundText('\n\n# ', ''));
@@ -379,6 +431,10 @@ export function setupEditor({ preview, templateStore, assetService }) {
       }
 
       templateStore.upsertTemplate(key, newTemplate);
+      if (contentTopOffsetMm !== undefined) {
+        syncTopOffsetControls(contentTopOffsetMm);
+        updatePreview();
+      }
     } catch (error) {
       alert(`Plantilla inválida: ${error instanceof Error ? error.message : String(error)}`);
       return;
@@ -416,6 +472,9 @@ export function setupEditor({ preview, templateStore, assetService }) {
           if (adminToggle?.checked) {
             setAdminForm(firstKey);
           }
+        } else {
+          syncTopOffsetControls(0);
+          updatePreview();
         }
         alert('Plantillas importadas.');
       } catch (error) {
@@ -469,6 +528,7 @@ export function setupEditor({ preview, templateStore, assetService }) {
       '## Discusión\n...\n';
   }
 
+  syncTopOffsetControls(currentTopOffsetMm);
   bootstrapTemplates();
   setInitialContent();
   const key = templateSelect?.value;

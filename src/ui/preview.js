@@ -50,7 +50,10 @@ export function createPreview(iframe) {
     <style id="tplStyle"></style>
   </head>
   <body>
-    <article id="doc" class="preview-doc" style="column-count: 2; column-gap: var(--column-gap); padding-top: var(--column-top-offset, 0);"></article>
+    <article id="doc" class="preview-doc">
+      <section class="preview-front"></section>
+      <section class="preview-columns"></section>
+    </article>
   </body>
 </html>`;
   }
@@ -122,15 +125,22 @@ export function createPreview(iframe) {
       const host = doc.getElementById('doc');
       if (!host) return;
 
-      host.style.columnCount = String(pendingLayout.columns);
-      host.style.columnGap = 'var(--column-gap)';
       if (pendingLayout.fontFamily) {
         host.style.setProperty('--font-family', pendingLayout.fontFamily);
       }
       if (pendingLayout.baseSize) {
         host.style.setProperty('--base-size', `${pendingLayout.baseSize}px`);
       }
-      host.style.setProperty('--column-top-offset', `${pendingLayout.contentTopOffsetMm ?? 0}mm`);
+
+      const columnsContainer = doc.querySelector('.preview-columns');
+      if (columnsContainer) {
+        columnsContainer.style.columnCount = String(pendingLayout.columns);
+        columnsContainer.style.columnGap = 'var(--column-gap)';
+        columnsContainer.style.setProperty(
+          '--column-top-offset',
+          `${pendingLayout.contentTopOffsetMm ?? 0}mm`
+        );
+      }
 
       const [top, right, bottom, left] = pendingLayout.margins;
       layoutCss = `@media print{@page{size:${pendingLayout.pageSize};margin:${top}mm ${right}mm ${bottom}mm ${left}mm;}}`;
@@ -154,20 +164,82 @@ export function createPreview(iframe) {
 
       const wrapper = doc.createElement('div');
       wrapper.innerHTML = sanitized;
+
       host.innerHTML = '';
-      const fragment = doc.createDocumentFragment();
-      while (wrapper.firstChild) {
-        fragment.appendChild(wrapper.firstChild);
+      const frontSection = doc.createElement('section');
+      frontSection.className = 'preview-front';
+      const columnsSection = doc.createElement('section');
+      columnsSection.className = 'preview-columns';
+      host.append(frontSection, columnsSection);
+
+      const nodes = Array.from(wrapper.childNodes);
+      const firstH1Index = nodes.findIndex(
+        (node) => node.nodeType === Node.ELEMENT_NODE && node.tagName?.toLowerCase() === 'h1'
+      );
+
+      const appendNode = (container, node) => {
+        if (node.nodeType === Node.TEXT_NODE && !node.textContent?.trim()) {
+          return;
+        }
+        container.appendChild(node);
+      };
+
+      if (firstH1Index === -1) {
+        nodes.forEach((node) => appendNode(columnsSection, node));
+      } else {
+        for (let i = 0; i < firstH1Index; i += 1) {
+          appendNode(frontSection, nodes[i]);
+        }
+        let cutoff = nodes.length;
+        for (let i = firstH1Index + 1; i < nodes.length; i += 1) {
+          const node = nodes[i];
+          if (node.nodeType === Node.ELEMENT_NODE) {
+            const tag = node.tagName.toLowerCase();
+            if (tag === 'h2' || tag === 'hr' || tag === 'section' || tag === 'table') {
+              cutoff = i;
+              break;
+            }
+            if (!['p', 'ul', 'ol', 'blockquote', 'figure'].includes(tag)) {
+              cutoff = i;
+              break;
+            }
+          } else if (node.nodeType !== Node.TEXT_NODE || node.textContent?.trim()) {
+            cutoff = i;
+            break;
+          }
+        }
+        for (let i = firstH1Index; i < cutoff; i += 1) {
+          appendNode(frontSection, nodes[i]);
+        }
+        for (let i = cutoff; i < nodes.length; i += 1) {
+          appendNode(columnsSection, nodes[i]);
+        }
       }
-      host.appendChild(fragment);
+
+      if (!frontSection.hasChildNodes()) {
+        frontSection.remove();
+      }
 
       host.querySelectorAll('img').forEach((img) => {
         const figure = doc.createElement('figure');
         figure.className = 'figure';
+        const originalAlt = img.getAttribute('alt') || '';
+        let cleanAlt = originalAlt;
+        let span = 1;
+        const spanMatch = originalAlt.match(/\|span=(\d+)/i);
+        if (spanMatch) {
+          span = Math.max(1, Number(spanMatch[1]));
+          cleanAlt = originalAlt.replace(spanMatch[0], '');
+        }
+        figure.dataset.span = String(span);
+
+        cleanAlt = cleanAlt.replace(/\|\s*$/, '').trim();
+
+        img.setAttribute('alt', cleanAlt || 'Figura');
         img.replaceWith(figure);
         figure.appendChild(img);
         const caption = doc.createElement('figcaption');
-        caption.textContent = img.getAttribute('alt') || 'Figura';
+        caption.textContent = cleanAlt || 'Figura';
         figure.appendChild(caption);
       });
     });
@@ -187,16 +259,20 @@ export function createPreview(iframe) {
     }
     const doc = ensureDocument();
     const host = doc.getElementById('doc');
-    if (host) {
-      host.style.columnCount = String(pendingLayout.columns);
-      host.style.columnGap = 'var(--column-gap)';
-      if (pendingLayout.fontFamily) {
-        host.style.setProperty('--font-family', pendingLayout.fontFamily);
-      }
-      if (pendingLayout.baseSize) {
-        host.style.setProperty('--base-size', `${pendingLayout.baseSize}px`);
-      }
-      host.style.setProperty('--column-top-offset', `${pendingLayout.contentTopOffsetMm ?? 0}mm`);
+    if (host && pendingLayout.fontFamily) {
+      host.style.setProperty('--font-family', pendingLayout.fontFamily);
+    }
+    if (host && pendingLayout.baseSize) {
+      host.style.setProperty('--base-size', `${pendingLayout.baseSize}px`);
+    }
+    const columnsContainer = doc.querySelector('.preview-columns');
+    if (columnsContainer) {
+      columnsContainer.style.columnCount = String(pendingLayout.columns);
+      columnsContainer.style.columnGap = 'var(--column-gap)';
+      columnsContainer.style.setProperty(
+        '--column-top-offset',
+        `${pendingLayout.contentTopOffsetMm ?? 0}mm`
+      );
     }
     syncStyle(doc);
     readyQueue.splice(0).forEach((fn) => {

@@ -29,6 +29,22 @@
   --column-top-offset: 0;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+input[type='range'].field__input--range {
+  width: 100%;
+}
+
 [data-theme='dark'] {
   color-scheme: dark;
   --color-surface: #1b1b1b;
@@ -663,23 +679,50 @@ body.theme-dark [data-tooltip]::after {
   font-size: var(--base-size);
   line-height: 1.6;
   font-family: var(--font-family);
-  column-gap: var(--column-gap);
-  column-fill: balance;
-  padding-top: var(--column-top-offset, 0);
+  color: inherit;
+  display: block;
 }
 
-.preview-doc h1,
-.preview-doc h2,
-.preview-doc h3 {
+.preview-front {
+  display: grid;
+  gap: 0.75rem;
+  margin-bottom: 2.5rem;
+  max-width: 100%;
+}
+
+.preview-front > * {
+  margin: 0;
+}
+
+.preview-front h1 {
+  font-family: var(--font-serif);
+  font-size: 2.2em;
+  letter-spacing: -0.02em;
+}
+
+.preview-front p {
+  color: var(--color-text-muted);
+}
+
+.preview-columns {
+  column-count: 2;
+  column-gap: var(--column-gap);
+  column-fill: balance;
+  margin-top: var(--column-top-offset, 0);
+}
+
+.preview-columns h1,
+.preview-columns h2,
+.preview-columns h3 {
   break-after: avoid;
   break-inside: avoid;
 }
 
-.preview-doc p,
-.preview-doc ul,
-.preview-doc ol,
-.preview-doc table,
-.preview-doc blockquote {
+.preview-columns p,
+.preview-columns ul,
+.preview-columns ol,
+.preview-columns table,
+.preview-columns blockquote {
   break-inside: avoid-column;
   overflow-wrap: break-word;
   hyphens: auto;
@@ -721,11 +764,28 @@ body.theme-dark [data-tooltip]::after {
 .figure {
   break-inside: avoid;
   margin: 0.75rem 0 1.25rem 0;
+  column-span: auto;
 }
 
 .figure img {
   width: 100%;
   height: auto;
+  display: block;
+}
+
+.figure[data-span='1'] {
+  column-span: auto;
+}
+
+.figure[data-span]:not([data-span='1']) {
+  column-span: all;
+  max-width: 90%;
+  margin-inline: auto;
+}
+
+.figure[data-span]:not([data-span='1']) img {
+  width: 100%;
+  margin-inline: auto;
   display: block;
 }
 

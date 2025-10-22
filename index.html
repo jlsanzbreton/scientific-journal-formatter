@@ -107,6 +107,16 @@
               <span class="field__label">Tamaño base (px)</span>
               <input id="baseSize" type="number" min="10" max="20" step="1" value="12" class="field__input">
             </label>
+            <div class="field field--inline">
+              <div class="field">
+                <span class="field__label">Offset superior (mm)</span>
+                <input id="topOffsetRange" type="range" min="0" max="80" value="0" class="field__input field__input--range">
+              </div>
+              <div class="field">
+                <span class="field__label sr-only">Offset superior numérico</span>
+                <input id="topOffsetNumber" type="number" min="0" max="80" step="1" value="0" class="field__input">
+              </div>
+            </div>
             <label class="field">
               <span class="field__label">Formato de salida</span>
               <select id="pageSize" class="field__input">
@@ -234,7 +244,7 @@
           <header class="workspace__header">
             <h2><span data-icon="edit" aria-hidden="true"></span>Editor Markdown</h2>
             <div class="workspace__toolbar">
-              <button id="insertImageBtn" class="button button--ghost" type="button" data-tooltip="Inserta una imagen subida en el cuerpo del artículo.">
+              <button id="insertImageBtn" class="button button--ghost" type="button" data-tooltip="Inserta una imagen subida, elige cuántas columnas debe ocupar y se añadirá el span automáticamente.">
                 <span data-icon="image" aria-hidden="true"></span>
                 + Imagen
               </button>
