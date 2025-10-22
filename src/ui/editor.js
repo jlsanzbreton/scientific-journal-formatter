@@ -271,6 +271,9 @@ export function setupEditor({ preview, templateStore, assetService }) {
     if (adminToggle?.checked) {
       setAdminForm(templateSelect.value);
     }
+    if (templateSelect?.value) {
+      applyTemplate(templateSelect.value);
+    }
   });
 
   newTemplateBtn?.addEventListener('click', () => {

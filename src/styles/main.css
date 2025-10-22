@@ -108,18 +108,6 @@ a {
   z-index: 1;
 }
 
-.branding__mark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background: linear-gradient(160deg, var(--color-ocre), var(--color-acento));
-  color: var(--color-surface);
-  box-shadow: 0 18px 32px rgba(200, 155, 91, 0.32);
-}
-
 .icon {
   width: 1.25rem;
   height: 1.25rem;
@@ -130,12 +118,24 @@ a {
   stroke-linejoin: round;
 }
 
-.branding__mark .icon {
-  width: 36px;
-  height: 36px;
-  stroke-width: 1.8;
-  stroke: currentColor;
-  fill: none;
+.branding__mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(160deg, var(--color-ocre), var(--color-acento));
+  color: var(--color-surface);
+  box-shadow: 0 18px 32px rgba(200, 155, 91, 0.32);
+  overflow: hidden;
+}
+
+.branding__mark img {
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.22));
 }
 
 .branding__copy {
@@ -663,6 +663,7 @@ body.theme-dark [data-tooltip]::after {
   line-height: 1.6;
   font-family: var(--font-family);
   column-gap: var(--column-gap);
+  column-fill: balance;
 }
 
 .preview-doc h1,
@@ -670,6 +671,16 @@ body.theme-dark [data-tooltip]::after {
 .preview-doc h3 {
   break-after: avoid;
   break-inside: avoid;
+}
+
+.preview-doc p,
+.preview-doc ul,
+.preview-doc ol,
+.preview-doc table,
+.preview-doc blockquote {
+  break-inside: avoid;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 .figure {

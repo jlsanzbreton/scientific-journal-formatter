@@ -1,18 +1,6 @@
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
 const ICONS = {
-  'logo-mark': {
-    viewBox: '0 0 48 48',
-    elements: [
-      { tag: 'circle', attrs: { cx: '24', cy: '24', r: '18', fill: 'none' } },
-      {
-        tag: 'path',
-        attrs: {
-          d: 'M15 30c3.5 3.5 14.5 5.5 18-4.5S28 8 21 10s-7.5 12.5 3 17 15-1 15-1',
-        },
-      },
-    ],
-  },
   moon: {
     viewBox: '0 0 24 24',
     elements: [
@@ -215,6 +203,21 @@ export function injectIcons(root = document) {
     const icon = createIcon(iconName, { className });
     if (!icon) return;
     icon.setAttribute('focusable', 'false');
+
+    const attributes = placeholder.getAttributeNames();
+    attributes.forEach((attr) => {
+      if (attr === 'data-icon' || attr === 'data-icon-class') return;
+      const value = placeholder.getAttribute(attr);
+      if (value === null) return;
+      icon.setAttribute(attr, value);
+    });
+
+    placeholder.classList.forEach((cls) => {
+      if (!icon.classList.contains(cls)) {
+        icon.classList.add(cls);
+      }
+    });
+
     placeholder.replaceWith(icon);
   });
 }
