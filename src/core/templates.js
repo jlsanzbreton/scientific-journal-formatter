@@ -48,6 +48,8 @@ const templateSchema = {
       minItems: 4,
       maxItems: 4,
     },
+    contentTopOffsetMm: { type: 'number', minimum: 0 },
+    maxPages: { type: 'integer', minimum: 1 },
     headings: { anyOf: [{ type: 'null' }, headingsSchema] },
     figure: { anyOf: [{ type: 'null' }, figureSchema] },
   },

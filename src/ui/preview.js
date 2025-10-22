@@ -23,6 +23,7 @@ export function createPreview(iframe) {
     baseSize: 12,
     pageSize: 'A4',
     margins: [18, 18, 18, 18],
+    contentTopOffsetMm: 0,
   };
   let ready = false;
   const readyQueue = [];
@@ -49,7 +50,7 @@ export function createPreview(iframe) {
     <style id="tplStyle"></style>
   </head>
   <body>
-    <article id="doc" class="preview-doc" style="column-count: 2;"></article>
+    <article id="doc" class="preview-doc" style="column-count: 2; column-gap: var(--column-gap); padding-top: var(--column-top-offset, 0);"></article>
   </body>
 </html>`;
   }
@@ -103,13 +104,17 @@ export function createPreview(iframe) {
     });
   }
 
-  function setLayout({ columns, fontFamily, baseSize, pageSize, margins }) {
+  function setLayout({ columns, fontFamily, baseSize, pageSize, margins, contentTopOffsetMm }) {
     pendingLayout = {
       columns: columns ?? pendingLayout.columns,
       fontFamily: fontFamily ?? pendingLayout.fontFamily,
       baseSize: baseSize ?? pendingLayout.baseSize,
       pageSize: pageSize ?? pendingLayout.pageSize,
       margins: Array.isArray(margins) && margins.length === 4 ? margins : pendingLayout.margins,
+      contentTopOffsetMm:
+        typeof contentTopOffsetMm === 'number' && Number.isFinite(contentTopOffsetMm)
+          ? Math.max(contentTopOffsetMm, 0)
+          : pendingLayout.contentTopOffsetMm,
     };
 
     runWhenReady(() => {
@@ -118,12 +123,14 @@ export function createPreview(iframe) {
       if (!host) return;
 
       host.style.columnCount = String(pendingLayout.columns);
+      host.style.columnGap = 'var(--column-gap)';
       if (pendingLayout.fontFamily) {
         host.style.setProperty('--font-family', pendingLayout.fontFamily);
       }
       if (pendingLayout.baseSize) {
         host.style.setProperty('--base-size', `${pendingLayout.baseSize}px`);
       }
+      host.style.setProperty('--column-top-offset', `${pendingLayout.contentTopOffsetMm ?? 0}mm`);
 
       const [top, right, bottom, left] = pendingLayout.margins;
       layoutCss = `@media print{@page{size:${pendingLayout.pageSize};margin:${top}mm ${right}mm ${bottom}mm ${left}mm;}}`;
@@ -182,12 +189,14 @@ export function createPreview(iframe) {
     const host = doc.getElementById('doc');
     if (host) {
       host.style.columnCount = String(pendingLayout.columns);
+      host.style.columnGap = 'var(--column-gap)';
       if (pendingLayout.fontFamily) {
         host.style.setProperty('--font-family', pendingLayout.fontFamily);
       }
       if (pendingLayout.baseSize) {
         host.style.setProperty('--base-size', `${pendingLayout.baseSize}px`);
       }
+      host.style.setProperty('--column-top-offset', `${pendingLayout.contentTopOffsetMm ?? 0}mm`);
     }
     syncStyle(doc);
     readyQueue.splice(0).forEach((fn) => {

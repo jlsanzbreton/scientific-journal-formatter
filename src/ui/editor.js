@@ -25,6 +25,8 @@ export function setupEditor({ preview, templateStore, assetService }) {
   const columnsSel = qs('#columns');
   const fontFamilySel = qs('#fontFamily');
   const baseSizeInput = qs('#baseSize');
+  const maxPagesInput = qs('#maxPages');
+  const maxPagesDefaultValue = maxPagesInput?.value ?? '';
   const templateSelect = qs('#templateSelect');
   const applyTemplateBtn = qs('#applyTemplate');
   const pageSizeSel = qs('#pageSize');
@@ -45,6 +47,8 @@ export function setupEditor({ preview, templateStore, assetService }) {
   const tplHeadings = qs('#tplHeadings');
   const tplFigure = qs('#tplFigure');
   const adminPanel = qs('#adminPanel');
+  const tplContentOffset = qs('#tplContentOffset');
+  const tplMaxPages = qs('#tplMaxPages');
   const themeToggle = qs('#themeToggle');
   const breadcrumbs = document.querySelectorAll('.breadcrumbs li');
 
@@ -54,6 +58,7 @@ export function setupEditor({ preview, templateStore, assetService }) {
 
   let currentMargins = [18, 18, 18, 18];
   let currentTemplateKey = null;
+  let currentTopOffsetMm = 0;
 
   function getLayoutState() {
     return {
@@ -62,6 +67,7 @@ export function setupEditor({ preview, templateStore, assetService }) {
       baseSize: Number(baseSizeInput?.value ?? 12),
       pageSize: pageSizeSel?.value ?? 'A4',
       margins: currentMargins,
+      contentTopOffsetMm: currentTopOffsetMm,
     };
   }
 
@@ -111,6 +117,13 @@ export function setupEditor({ preview, templateStore, assetService }) {
     tplMargins.value = (template.marginsMm || [18, 18, 18, 18]).join(', ');
     tplHeadings.value = JSON.stringify(template.headings ?? {}, null, 2);
     tplFigure.value = JSON.stringify(template.figure ?? {}, null, 2);
+    if (tplContentOffset) {
+      tplContentOffset.value =
+        template.contentTopOffsetMm !== undefined ? String(template.contentTopOffsetMm) : '';
+    }
+    if (tplMaxPages) {
+      tplMaxPages.value = template.maxPages !== undefined ? String(template.maxPages) : '';
+    }
   }
 
   function applyTemplate(key) {
@@ -122,8 +135,13 @@ export function setupEditor({ preview, templateStore, assetService }) {
     if (fontFamilySel) fontFamilySel.value = template.fontFamily ?? fontFamilySel.value;
     if (columnsSel) columnsSel.value = String(template.columns ?? Number(columnsSel.value ?? 2));
     if (pageSizeSel) pageSizeSel.value = template.pageSize ?? 'A4';
+    if (maxPagesInput) {
+      maxPagesInput.value =
+        template.maxPages !== undefined ? String(template.maxPages) : maxPagesDefaultValue;
+    }
 
     currentMargins = Array.isArray(template.marginsMm) && template.marginsMm.length === 4 ? template.marginsMm : [18, 18, 18, 18];
+    currentTopOffsetMm = typeof template.contentTopOffsetMm === 'number' ? template.contentTopOffsetMm : 0;
 
     preview.applyHeadingStyles(template);
     preview.setLayout({ ...getLayoutState(), margins: currentMargins, pageSize: template.pageSize ?? 'A4' });
@@ -286,6 +304,8 @@ export function setupEditor({ preview, templateStore, assetService }) {
     tplMargins.value = '18, 18, 18, 18';
     tplHeadings.value = '{"h1":{"size":"1.6em","weight":700},"h2":{"size":"1.3em","weight":600},"h3":{"size":"1.15em","weight":600}}';
     tplFigure.value = '{"captionSize":"0.9em","captionColor":"#555","span":"auto"}';
+    if (tplContentOffset) tplContentOffset.value = '';
+    if (tplMaxPages) tplMaxPages.value = '';
   });
 
   saveTemplateBtn?.addEventListener('click', () => {
@@ -314,8 +334,34 @@ export function setupEditor({ preview, templateStore, assetService }) {
 
     const margins = parseMargins(tplMargins.value);
 
+    let contentTopOffsetMm;
+    if (tplContentOffset) {
+      const rawOffset = tplContentOffset.value.trim();
+      if (rawOffset !== '') {
+        const parsed = Number(rawOffset);
+        if (!Number.isFinite(parsed) || parsed < 0) {
+          alert('Offset superior inválido. Usa números mayores o iguales que 0.');
+          return;
+        }
+        contentTopOffsetMm = parsed;
+      }
+    }
+
+    let maxPagesValue;
+    if (tplMaxPages) {
+      const rawMax = tplMaxPages.value.trim();
+      if (rawMax !== '') {
+        const parsed = Number(rawMax);
+        if (!Number.isInteger(parsed) || parsed < 1) {
+          alert('Páginas máximas inválidas. Usa enteros mayores o iguales que 1.');
+          return;
+        }
+        maxPagesValue = parsed;
+      }
+    }
+
     try {
-      templateStore.upsertTemplate(key, {
+      const newTemplate = {
         displayName: tplName.value || key,
         columns: Number(tplColumns.value),
         fontFamily: tplFont.value,
@@ -324,7 +370,15 @@ export function setupEditor({ preview, templateStore, assetService }) {
         marginsMm: margins,
         headings,
         figure,
-      });
+      };
+      if (contentTopOffsetMm !== undefined) {
+        newTemplate.contentTopOffsetMm = contentTopOffsetMm;
+      }
+      if (maxPagesValue !== undefined) {
+        newTemplate.maxPages = maxPagesValue;
+      }
+
+      templateStore.upsertTemplate(key, newTemplate);
     } catch (error) {
       alert(`Plantilla inválida: ${error instanceof Error ? error.message : String(error)}`);
       return;
@@ -358,6 +412,7 @@ export function setupEditor({ preview, templateStore, assetService }) {
         refreshTemplateSelect(firstKey);
         if (firstKey) {
           templateSelect.value = firstKey;
+          applyTemplate(firstKey);
           if (adminToggle?.checked) {
             setAdminForm(firstKey);
           }

@@ -11,6 +11,8 @@
       18,
       18
     ],
+    "contentTopOffsetMm": 40,
+    "maxPages": 6,
     "headings": {
       "h1": {
         "size": "1.6em",
@@ -43,6 +45,8 @@
       18,
       18
     ],
+    "contentTopOffsetMm": 38,
+    "maxPages": 6,
     "headings": {
       "h1": {
         "size": "1.55em",
@@ -71,6 +75,8 @@
       20,
       16
     ],
+    "contentTopOffsetMm": 32,
+    "maxPages": 8,
     "headings": {
       "h1": {
         "size": "1.5em",
@@ -103,6 +109,8 @@
       25,
       20
     ],
+    "contentTopOffsetMm": 36,
+    "maxPages": 10,
     "headings": {
       "h1": {
         "size": "1.6em",
@@ -138,6 +146,8 @@
       29,
       18
     ],
+    "contentTopOffsetMm": 34,
+    "maxPages": 8,
     "headings": {
       "h1": {
         "size": "1.55em",

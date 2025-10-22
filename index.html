@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Scientific Journal Formatter (MVP+Admin)</title>
+  <title>Scientific Journal Formatter (v0.1.0)</title>
   <meta name="description" content="Formatea texto científico con layouts por columnas y plantillas de revista. Incluye editor de plantillas (admin).">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,7 +22,7 @@
         </span>
         <div class="branding__copy">
           <p class="branding__kicker">Scientific Journal Formatter</p>
-          <h1 class="branding__title">SciForm — MVP + Admin</h1>
+          <h1 class="branding__title">SciForm — v0.1.0</h1>
           <p class="branding__subtitle">Prepara tu artículo científico en minutos con plantillas editoriales, previsualización y herramientas de maquetación.</p>
         </div>
       </div>
@@ -187,6 +187,14 @@
                     <option value="A4">A4</option>
                     <option value="Letter">Letter</option>
                   </select>
+                </label>
+                <label class="field">
+                  <span class="field__label">Offset superior (mm)</span>
+                  <input id="tplContentOffset" type="number" min="0" step="1" class="field__input" placeholder="30">
+                </label>
+                <label class="field">
+                  <span class="field__label">Máx. páginas</span>
+                  <input id="tplMaxPages" type="number" min="1" step="1" class="field__input" placeholder="6">
                 </label>
                 <label class="field field--full">
                   <span class="field__label">Márgenes (mm)</span>

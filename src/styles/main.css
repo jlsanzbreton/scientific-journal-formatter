@@ -26,6 +26,7 @@
   --column-gap: 2rem;
   --base-size: 12px;
   --font-family: Inter, system-ui, sans-serif;
+  --column-top-offset: 0;
 }
 
 [data-theme='dark'] {
@@ -664,6 +665,7 @@ body.theme-dark [data-tooltip]::after {
   font-family: var(--font-family);
   column-gap: var(--column-gap);
   column-fill: balance;
+  padding-top: var(--column-top-offset, 0);
 }
 
 .preview-doc h1,
@@ -678,9 +680,42 @@ body.theme-dark [data-tooltip]::after {
 .preview-doc ol,
 .preview-doc table,
 .preview-doc blockquote {
-  break-inside: avoid;
+  break-inside: avoid-column;
   overflow-wrap: break-word;
   hyphens: auto;
+}
+
+.preview-doc pre {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: rgba(27, 27, 27, 0.05);
+  color: inherit;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  margin: 0.75rem 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  break-inside: avoid-column;
+  column-span: auto;
+}
+
+.preview-doc code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: rgba(27, 27, 27, 0.05);
+  padding: 0.15em 0.4em;
+  border-radius: 6px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  column-span: auto;
+}
+
+.preview-doc pre code {
+  padding: 0;
+  background: transparent;
+  white-space: inherit;
 }
 
 .figure {
