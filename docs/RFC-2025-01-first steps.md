@@ -83,3 +83,6 @@ Preparar el MVP para evolucionar de forma segura: saneamiento de datos, PWA offl
 - Tras completar cada paso, ejecutar tests o verificaciones pertinentes y pegar resultados en comentario de PR.
 - Mantener commits atonicos por paso (prefijo `step-0`, `step-1`, ...).
 - Solicitar feedback humano si se detecta bloqueo mayor de 1h en un paso.
+
+## Registro de avances
+- 2025-10-22 — Paso 2: UI/UX alineada con la marca implementada. Se reemplazó Tailwind por hoja de estilos propia con paleta (ocre, marfil, antracita, acento), se reorganizó el layout en paneles responsivos con breadcrumbs, tooltips e iconografía SVG personalizada (`src/ui/components/icons.js`) y se añadió modo oscuro conmutado por el usuario. `npm run build` finalizó correctamente registrando los bundles actualizados.

@@ -9,7 +9,7 @@ export function registerPwa() {
     event.preventDefault();
     const button = document.getElementById('installBtn');
     if (!button) return;
-    button.classList.remove('hidden');
+    button.hidden = false;
     button.onclick = () => event.prompt();
   });
 }

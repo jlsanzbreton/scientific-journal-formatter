@@ -1,3 +1,7 @@
+import { createIcon, injectIcons } from './components/icons.js';
+
+const THEME_STORAGE_KEY = 'sjf.theme';
+
 function qs(selector) {
   return document.querySelector(selector);
 }
@@ -25,7 +29,6 @@ export function setupEditor({ preview, templateStore, assetService }) {
   const applyTemplateBtn = qs('#applyTemplate');
   const pageSizeSel = qs('#pageSize');
   const adminToggle = qs('#adminToggle');
-  const adminPanel = qs('#adminPanel');
   const importTemplatesBtn = qs('#importTemplates');
   const exportTemplatesBtn = qs('#exportTemplates');
   const resetTemplatesBtn = qs('#resetTemplates');
@@ -41,6 +44,9 @@ export function setupEditor({ preview, templateStore, assetService }) {
   const tplMargins = qs('#tplMargins');
   const tplHeadings = qs('#tplHeadings');
   const tplFigure = qs('#tplFigure');
+  const adminPanel = qs('#adminPanel');
+  const themeToggle = qs('#themeToggle');
+  const breadcrumbs = document.querySelectorAll('.breadcrumbs li');
 
   if (!editor) {
     throw new Error('Editor element not found');
@@ -138,6 +144,58 @@ export function setupEditor({ preview, templateStore, assetService }) {
     }
   }
 
+  function updateBreadcrumbHighlight(currentStep = 1) {
+    breadcrumbs.forEach((crumb, index) => {
+      if (index === currentStep) {
+        crumb.setAttribute('aria-current', 'page');
+      } else {
+        crumb.removeAttribute('aria-current');
+      }
+    });
+  }
+
+  function applyTheme(theme) {
+    const root = document.documentElement;
+    const body = document.body;
+    if (theme === 'dark') {
+      root.setAttribute('data-theme', 'dark');
+      body.classList.add('theme-dark');
+      body.classList.remove('theme-light');
+      setThemeButtonState('dark');
+      localStorage.setItem(THEME_STORAGE_KEY, 'dark');
+    } else {
+      root.setAttribute('data-theme', 'light');
+      body.classList.remove('theme-dark');
+      body.classList.add('theme-light');
+      setThemeButtonState('light');
+      localStorage.setItem(THEME_STORAGE_KEY, 'light');
+    }
+  }
+
+  function setThemeButtonState(theme) {
+    if (!themeToggle) return;
+    const label = themeToggle.querySelector('.button__label');
+    const iconHolder = themeToggle.querySelector('svg');
+    themeToggle.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+    if (label) {
+      label.textContent = theme === 'dark' ? 'Modo claro' : 'Modo oscuro';
+    }
+    if (iconHolder) {
+      const newIcon = createIcon(theme === 'dark' ? 'sun' : 'moon');
+      iconHolder.replaceWith(newIcon);
+    }
+  }
+
+  function initTheme() {
+    const stored = localStorage.getItem(THEME_STORAGE_KEY);
+    const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches;
+    const theme = stored || (prefersDark ? 'dark' : 'light');
+    applyTheme(theme);
+  }
+
+  injectIcons();
+  initTheme();
+
   editor.addEventListener('input', updatePreview);
   columnsSel?.addEventListener('change', updatePreview);
   fontFamilySel?.addEventListener('change', updatePreview);
@@ -201,7 +259,9 @@ export function setupEditor({ preview, templateStore, assetService }) {
   });
 
   adminToggle?.addEventListener('change', () => {
-    adminPanel?.classList.toggle('hidden', !adminToggle.checked);
+    if (adminPanel) {
+      adminPanel.hidden = !adminToggle.checked;
+    }
     if (adminToggle.checked && templateSelect?.value) {
       setAdminForm(templateSelect.value);
     }
@@ -325,6 +385,12 @@ export function setupEditor({ preview, templateStore, assetService }) {
 
   window.addEventListener('beforeunload', () => assetService.dispose(), { once: true });
 
+  themeToggle?.addEventListener('click', () => {
+    const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    const next = current === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+  });
+
   function setInitialContent() {
     editor.value =
       '# Título del artículo\n\n' +
@@ -344,4 +410,6 @@ export function setupEditor({ preview, templateStore, assetService }) {
   } else {
     updatePreview();
   }
+
+  updateBreadcrumbHighlight(1);
 }
