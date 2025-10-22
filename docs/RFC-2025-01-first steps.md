@@ -29,6 +29,7 @@ Preparar el MVP para evolucionar de forma segura: saneamiento de datos, PWA offl
 5. Crear `src/main.js` como punto de entrada que orquesta la inicializacion.
 6. Actualizar `index.html` para apuntar a `/src/main.js` compilado por Vite (usar `<script type="module" src="/src/main.js"></script>`).
 7. Crear carpeta `public/` para `manifest.webmanifest`, assets estaticos y service worker si se desea servir sin procesado.
+8. Reubicar `assets/icons` y `assets/logo` a `public/assets/…` (o automatizar su copiado) y mantener actualizado el script `scripts/generate-icons.mjs` para apuntar a la nueva ubicacion.
 
 ### Paso 2 — UI/UX segun marca
 1. Sustituir dependencia de Tailwind CDN por estilos propios en `src/styles/main.css` usando variables CSS para la paleta propuesta.
@@ -53,6 +54,7 @@ Preparar el MVP para evolucionar de forma segura: saneamiento de datos, PWA offl
 2. Configurar caching strategy: `StaleWhileRevalidate` para plantillas JSON, `CacheFirst` para assets.
 3. Eliminar dependencias CDN (Tailwind, Marked) y servir bundles locales para funcionar offline.
 4. Añadir test manual: `npm run build && npm run preview` + Lighthouse PWA audit (documentar resultados en README).
+5. Registrar el service worker usando `import.meta.env.BASE_URL` (p.ej. `navigator.serviceWorker.register(new URL('sw.js', import.meta.env.BASE_URL))`) para respetar despliegues en subrutas como GitHub Pages.
 
 ### Paso 5 — Pipeline PDF y exportaciones
 1. Evaluar libs: `pagedjs` (render en navegador) vs `pdfmake` (programatico). Seleccionar opcion y documentar decision.
@@ -85,4 +87,5 @@ Preparar el MVP para evolucionar de forma segura: saneamiento de datos, PWA offl
 - Solicitar feedback humano si se detecta bloqueo mayor de 1h en un paso.
 
 ## Registro de avances
+- 2025-10-22 — Paso 1: Reestructuración inicial completada. Código movido a `src/` (core/ui/services/data/styles), `index.html` apunta a `/src/main.js`, se creó `public/` para manifest y service worker, y se orquestó la inicialización desde `src/main.js`.
 - 2025-10-22 — Paso 2: UI/UX alineada con la marca implementada. Se reemplazó Tailwind por hoja de estilos propia con paleta (ocre, marfil, antracita, acento), se reorganizó el layout en paneles responsivos con breadcrumbs, tooltips e iconografía SVG personalizada (`src/ui/components/icons.js`) y se añadió modo oscuro conmutado por el usuario. `npm run build` finalizó correctamente registrando los bundles actualizados.
