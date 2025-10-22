@@ -6,9 +6,9 @@ import sharp from "sharp";
 /**
  * Config
  */
-const SRC = "assets/logo/sciform_master_1024.png";
-const OUT_ICONS = "assets/icons";
-const OUT_LOGO = "assets/logo";
+const SRC = "public/assets/logo/sciform_master_1024.png";
+const OUT_ICONS = "public/assets/icons";
+const OUT_LOGO = "public/assets/logo";
 
 // Tamaños estándar PWA + favicons
 const SIZES = [512, 192, 96, 48, 32, 16];
@@ -68,7 +68,7 @@ async function main() {
   await sharp(SRC).resize(512, 512).flatten({ background: BG }).png().toFile(symbol512);
   console.log(`✅ ${symbol512}`);
 
-  console.log("🎉 Listo. Revisa /assets/icons y /assets/logo");
+  console.log("🎉 Listo. Revisa public/assets/icons y public/assets/logo");
 }
 
 main().catch((err) => {
