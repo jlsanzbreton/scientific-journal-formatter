@@ -1,4 +1,13 @@
+import { marked } from 'marked';
+import createDOMPurify from 'dompurify';
 import previewStylesUrl from '../styles/main.css?url';
+
+marked.setOptions({
+  gfm: true,
+  breaks: true,
+  headerIds: true,
+  mangle: false,
+});
 
 export function createPreview(iframe) {
   if (!iframe) {
@@ -17,6 +26,7 @@ export function createPreview(iframe) {
   };
   let ready = false;
   const readyQueue = [];
+  let DOMPurify = createDOMPurify(window);
 
   function getDocument() {
     return iframe.contentDocument ?? iframe.contentWindow?.document ?? null;
@@ -121,11 +131,6 @@ export function createPreview(iframe) {
     });
   }
 
-  function getMarked() {
-    const globalMarked = window.marked ?? globalThis.marked;
-    return typeof globalMarked?.parse === 'function' ? globalMarked : null;
-  }
-
   function renderMarkdown(markdown) {
     pendingMarkdown = markdown ?? '';
 
@@ -134,9 +139,20 @@ export function createPreview(iframe) {
       const host = doc.getElementById('doc');
       if (!host) return;
 
-      const parser = getMarked();
-      const html = parser ? parser.parse(pendingMarkdown) : pendingMarkdown;
-      host.innerHTML = html;
+      const rawHtml = marked.parse(pendingMarkdown);
+      const sanitized = DOMPurify.sanitize(rawHtml, {
+        USE_PROFILES: { html: true },
+        RETURN_TRUSTED_TYPE: false,
+      });
+
+      const wrapper = doc.createElement('div');
+      wrapper.innerHTML = sanitized;
+      host.innerHTML = '';
+      const fragment = doc.createDocumentFragment();
+      while (wrapper.firstChild) {
+        fragment.appendChild(wrapper.firstChild);
+      }
+      host.appendChild(fragment);
 
       host.querySelectorAll('img').forEach((img) => {
         const figure = doc.createElement('figure');
@@ -159,6 +175,9 @@ export function createPreview(iframe) {
 
   iframe.addEventListener('load', () => {
     ready = true;
+    if (iframe.contentWindow) {
+      DOMPurify = createDOMPurify(iframe.contentWindow);
+    }
     const doc = ensureDocument();
     const host = doc.getElementById('doc');
     if (host) {

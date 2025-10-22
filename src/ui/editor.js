@@ -311,16 +311,21 @@ export function setupEditor({ preview, templateStore, assetService }) {
 
     const margins = parseMargins(tplMargins.value);
 
-    templateStore.upsertTemplate(key, {
-      displayName: tplName.value || key,
-      columns: Number(tplColumns.value),
-      fontFamily: tplFont.value,
-      baseSizePx: Number(tplBase.value),
-      pageSize: tplPage.value,
-      marginsMm: margins,
-      headings,
-      figure,
-    });
+    try {
+      templateStore.upsertTemplate(key, {
+        displayName: tplName.value || key,
+        columns: Number(tplColumns.value),
+        fontFamily: tplFont.value,
+        baseSizePx: Number(tplBase.value),
+        pageSize: tplPage.value,
+        marginsMm: margins,
+        headings,
+        figure,
+      });
+    } catch (error) {
+      alert(`Plantilla inválida: ${error instanceof Error ? error.message : String(error)}`);
+      return;
+    }
 
     refreshTemplateSelect(key);
     templateSelect.value = key;
@@ -355,8 +360,12 @@ export function setupEditor({ preview, templateStore, assetService }) {
           }
         }
         alert('Plantillas importadas.');
-      } catch {
-        alert('JSON inválido.');
+      } catch (error) {
+        alert(
+          error instanceof Error
+            ? `No se pudo importar: ${error.message}`
+            : 'No se pudo importar el archivo especificado.'
+        );
       }
     };
     input.click();
