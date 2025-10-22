@@ -1,0 +1,49 @@
+:root {
+  --page-margin: 2rem;
+  --column-gap: 2rem;
+  --base-size: 12px;
+  --font-family: Inter, system-ui, sans-serif;
+}
+
+.preview-doc {
+  margin: var(--page-margin);
+  font-size: var(--base-size);
+  line-height: 1.6;
+  font-family: var(--font-family);
+  column-gap: var(--column-gap);
+}
+
+.preview-doc h1,
+.preview-doc h2,
+.preview-doc h3 {
+  break-after: avoid;
+  break-inside: avoid;
+}
+
+.figure {
+  break-inside: avoid;
+  margin: 0.75rem 0 1.25rem 0;
+}
+
+.figure img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.figure figcaption {
+  font-size: 0.9em;
+  color: #525252;
+  margin-top: 0.25rem;
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 18mm;
+  }
+
+  body {
+    background: #fff;
+  }
+}
