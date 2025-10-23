@@ -59,7 +59,6 @@ export function setupEditor({ preview, templateStore, assetService }) {
   }
 
   let currentMargins = [18, 18, 18, 18];
-  let currentTemplateKey = null;
   let currentTopOffsetMm = 0;
 
   function syncTopOffsetControls(value) {
@@ -143,7 +142,6 @@ export function setupEditor({ preview, templateStore, assetService }) {
   function applyTemplate(key) {
     const template = templateStore.getTemplate(key);
     if (!template) return;
-    currentTemplateKey = key;
 
     if (baseSizeInput) baseSizeInput.value = template.baseSizePx ?? 12;
     if (fontFamilySel) fontFamilySel.value = template.fontFamily ?? fontFamilySel.value;
@@ -154,13 +152,20 @@ export function setupEditor({ preview, templateStore, assetService }) {
         template.maxPages !== undefined ? String(template.maxPages) : maxPagesDefaultValue;
     }
 
-    currentMargins = Array.isArray(template.marginsMm) && template.marginsMm.length === 4 ? template.marginsMm : [18, 18, 18, 18];
+    currentMargins =
+      Array.isArray(template.marginsMm) && template.marginsMm.length === 4
+        ? template.marginsMm
+        : [18, 18, 18, 18];
     syncTopOffsetControls(
-      typeof template.contentTopOffsetMm === 'number' ? template.contentTopOffsetMm : 0
+      typeof template.contentTopOffsetMm === 'number' ? template.contentTopOffsetMm : 0,
     );
 
     preview.applyHeadingStyles(template);
-    preview.setLayout({ ...getLayoutState(), margins: currentMargins, pageSize: template.pageSize ?? 'A4' });
+    preview.setLayout({
+      ...getLayoutState(),
+      margins: currentMargins,
+      pageSize: template.pageSize ?? 'A4',
+    });
     updatePreview();
   }
 
@@ -300,14 +305,14 @@ export function setupEditor({ preview, templateStore, assetService }) {
       .map((asset, index) => `${index + 1}) ${asset.name}`)
       .join('\n');
     const selection = prompt(
-      'Elige imagen (número) y luego indica cuántas columnas debe ocupar.\nListado:\n' + options
+      'Elige imagen (número) y luego indica cuántas columnas debe ocupar.\nListado:\n' + options,
     );
     const idx = Number(selection) - 1;
     const chosen = assetService.getImageByIndex(idx);
     if (!chosen) return;
     let spanInput = prompt(
       `¿Cuántas columnas debe ocupar la figura? (1 - ${columnsSel ? columnsSel.value : '2'})`,
-      '1'
+      '1',
     );
     let span = Number(spanInput);
     const maxColumns = Number(columnsSel?.value ?? 2);
@@ -354,7 +359,8 @@ export function setupEditor({ preview, templateStore, assetService }) {
     tplBase.value = 12;
     tplPage.value = 'A4';
     tplMargins.value = '18, 18, 18, 18';
-    tplHeadings.value = '{"h1":{"size":"1.6em","weight":700},"h2":{"size":"1.3em","weight":600},"h3":{"size":"1.15em","weight":600}}';
+    tplHeadings.value =
+      '{"h1":{"size":"1.6em","weight":700},"h2":{"size":"1.3em","weight":600},"h3":{"size":"1.15em","weight":600}}';
     tplFigure.value = '{"captionSize":"0.9em","captionColor":"#555","span":"auto"}';
     if (tplContentOffset) tplContentOffset.value = '';
     if (tplMaxPages) tplMaxPages.value = '';
@@ -481,7 +487,7 @@ export function setupEditor({ preview, templateStore, assetService }) {
         alert(
           error instanceof Error
             ? `No se pudo importar: ${error.message}`
-            : 'No se pudo importar el archivo especificado.'
+            : 'No se pudo importar el archivo especificado.',
         );
       }
     };
@@ -512,7 +518,8 @@ export function setupEditor({ preview, templateStore, assetService }) {
   window.addEventListener('beforeunload', () => assetService.dispose(), { once: true });
 
   themeToggle?.addEventListener('click', () => {
-    const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    const current =
+      document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
     const next = current === 'dark' ? 'light' : 'dark';
     applyTheme(next);
   });

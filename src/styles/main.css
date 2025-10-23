@@ -16,7 +16,9 @@
   --shadow-card: 0 18px 40px rgba(27, 27, 27, 0.12);
   --font-serif: 'Merriweather', serif;
   --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Source Code Pro', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --font-mono:
+    'JetBrains Mono', 'Source Code Pro', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    'Liberation Mono', 'Courier New', monospace;
   --radius-lg: 32px;
   --radius-md: 20px;
   --radius-sm: 12px;
@@ -75,7 +77,9 @@ body {
   line-height: 1.5;
   color: var(--color-text);
   background: linear-gradient(140deg, var(--color-marfil) 0%, #fff8eb 55%, #fdfaf4 100%);
-  transition: background var(--transition-base), color var(--transition-base);
+  transition:
+    background var(--transition-base),
+    color var(--transition-base);
 }
 
 body.theme-dark {
@@ -212,7 +216,12 @@ a {
   cursor: pointer;
   background: var(--color-surface);
   color: var(--color-text);
-  transition: background var(--transition-base), color var(--transition-base), box-shadow var(--transition-base), border var(--transition-base), transform var(--transition-fast);
+  transition:
+    background var(--transition-base),
+    color var(--transition-base),
+    box-shadow var(--transition-base),
+    border var(--transition-base),
+    transform var(--transition-fast);
 }
 
 .button:focus-visible {
@@ -282,7 +291,9 @@ a {
   border: 1px solid var(--color-border);
   background: var(--color-surface);
   cursor: pointer;
-  transition: border var(--transition-base), box-shadow var(--transition-base);
+  transition:
+    border var(--transition-base),
+    box-shadow var(--transition-base);
 }
 
 .admin-toggle input {
@@ -405,7 +416,10 @@ a {
   font-family: inherit;
   font-size: 0.95rem;
   color: var(--color-text);
-  transition: border var(--transition-base), box-shadow var(--transition-base), background var(--transition-base);
+  transition:
+    border var(--transition-base),
+    box-shadow var(--transition-base),
+    background var(--transition-base);
 }
 
 .field__input:focus-visible {
@@ -617,7 +631,9 @@ body.theme-dark .app-footer {
   white-space: normal;
   opacity: 0;
   pointer-events: none;
-  transition: opacity var(--transition-fast), transform var(--transition-fast);
+  transition:
+    opacity var(--transition-fast),
+    transform var(--transition-fast);
   transform-origin: bottom center;
 }
 

@@ -7,9 +7,14 @@ export function registerPwa() {
 
   window.addEventListener('beforeinstallprompt', (event) => {
     event.preventDefault();
+    const promptEvent = /** @type {any} */ (event);
     const button = document.getElementById('installBtn');
     if (!button) return;
     button.hidden = false;
-    button.onclick = () => event.prompt();
+    button.onclick = () => {
+      if (typeof promptEvent.prompt === 'function') {
+        promptEvent.prompt();
+      }
+    };
   });
 }

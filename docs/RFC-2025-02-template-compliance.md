@@ -1,6 +1,7 @@
 # RFC-2025-02 — Template Compliance & Rich Layout
 
 ## Context
+
 - Los pasos 1–3 del RFC-2025-01 ya reorganizaron el proyecto (`src/`, sanitización, UI basada en la marca).
 - Persisten tres necesidades antes de abordar la PWA offline (Paso 4 del RFC-2025-01):
   1. Las imágenes insertadas vía PWA se muestran como huecos porque DOMPurify bloquea URLs `blob:`.
@@ -8,15 +9,18 @@
   3. Cada plantilla necesita validación automática (check verde cuando el documento cumple la revista).
 
 ## Objetivo
+
 Implementar layout enriquecido (front matter + columnas controladas), controles avanzados de formato y un motor de validación por plantilla, dejando el repositorio listo para continuar con la PWA offline.
 
 ## Secuencia de trabajo (Codex debe avanzar paso a paso y confirmar cada hito)
 
 ### Paso 0 — Sincronizar rama y dependencias
+
 1. Ejecutar `git pull` sobre la rama `dev` y asegurarse de que no hay cambios locales pendientes.
 2. Verificar que `npm install` está actualizado (si el lock cambia, comunicar antes de subir).
 
 ### Paso 1 — Front matter y control manual de offset
+
 1. En `index.html` (panel "2 · Diseño") añadir controles visibles para "Inicio de columnas":
    - `input[type="range"]` (0–80 mm) enlazado con `input[type="number"]` (min 0, step 1).
    - Ambos deben sincronizarse con `currentTopOffsetMm` en `src/ui/editor.js` y refrescar la previsualización.
@@ -40,6 +44,7 @@ Implementar layout enriquecido (front matter + columnas controladas), controles 
 7. Ejecutar `npm run build` y preparar texto de commit sugerido (`chore: split preview front matter` o similar). No hacer commit; dejarlo listo para revisión humana.
 
 ### Paso 2 — Inserción y renderizado de imágenes con spans
+
 1. Ajustar `preview.js` para permitir URLs `blob:` al sanitizar con DOMPurify (`ADD_URI_SAFE_ATTR` o `setConfig`), evitando abrir la puerta a dominios no confiables.
 2. Mejorar el flujo del botón “+ Imagen” en `src/ui/editor.js`:
    - Tras elegir imagen, solicitar span deseado (1..columnas actuales). Valor inválido → 1.
@@ -55,6 +60,7 @@ Implementar layout enriquecido (front matter + columnas controladas), controles 
 6. Ejecutar `npm run build` y redactar texto sugerido de commit (`feat: allow multi-span figures`). Sin commit.
 
 ### Paso 3 — Controles de alineación y spans por párrafo
+
 1. Añadir botones en la toolbar del editor (`index.html`) para alineación izquierda, centrado, justificado y columnas individuales (1–4) aplicables a la selección.
 2. En `src/ui/editor.js`, implementar helpers que envuelvan el bloque seleccionado en etiquetas HTML soportadas (`<div class="align-justify span-2">…</div>`). Mantener compatibilidad con Markdown (se aceptan raw HTML blocks).
 3. Actualizar la previsualización para reconocer esas clases y aplicar estilos adecuados: `.align-left`, `.align-center`, `.align-justify`, `.span-1..span-4` (con `column-span` cuando span > 1).
@@ -62,6 +68,7 @@ Implementar layout enriquecido (front matter + columnas controladas), controles 
 5. `npm run build`, validar manualmente con texto real (combinando distintos estilos). Preparar texto de commit (`feat: add alignment and span controls`).
 
 ### Paso 4 — Motor de validación por plantilla
+
 1. Definir estructura de reglas en `src/data/templates.json` (sección `rules` opcional por plantilla): límites de columnas, `maxPages`, tamaño base, requisitos mínimos de front matter, etc.
 2. Crear `src/core/templateRules.js` con funciones para:
    - Evaluar un estado (`content`, layout aplicado, plantilla activa) y devolver lista de incumplimientos.
@@ -71,6 +78,7 @@ Implementar layout enriquecido (front matter + columnas controladas), controles 
 5. `npm run build` + `npm test`. Preparar texto de commit (`feat: add template compliance check`).
 
 ### Paso 5 — Documentación y entrega
+
 1. Actualizar `README.md` con sección “Template compliance” explicando nuevo panel, spans y controles de alineación.
 2. Registrar avances en este RFC (Paso 1…5) y enlazarlo desde el README si procede.
 3. Listar pruebas manuales realizadas (plantilla con spans, validación OK/KO).
@@ -78,6 +86,7 @@ Implementar layout enriquecido (front matter + columnas controladas), controles 
 5. No realizar commit; entregar resumen y sugerencias de mensajes para que el equipo humano los ejecute.
 
 ## Reglas para ejecución autónoma
+
 - Avanzar en orden. No saltar pasos sin aprobación.
 - Al cerrar cada paso, ejecutar los comandos indicados y anotar resultados (build/test) en el comentario de entrega.
 - No hacer commits ni pushes; sólo preparar los textos sugeridos.

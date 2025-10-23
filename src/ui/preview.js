@@ -1,13 +1,16 @@
 import { marked } from 'marked';
 import createDOMPurify from 'dompurify';
+
 import previewStylesUrl from '../styles/main.css?url';
 
-marked.setOptions({
-  gfm: true,
-  breaks: true,
-  headerIds: true,
-  mangle: false,
-});
+marked.setOptions(
+  /** @type {import('marked').MarkedOptions & Record<string, unknown>} */ ({
+    gfm: true,
+    breaks: true,
+    headerIds: true,
+    mangle: false,
+  }),
+);
 
 export function createPreview(iframe) {
   if (!iframe) {
@@ -138,7 +141,7 @@ export function createPreview(iframe) {
         columnsContainer.style.columnGap = 'var(--column-gap)';
         columnsContainer.style.setProperty(
           '--column-top-offset',
-          `${pendingLayout.contentTopOffsetMm ?? 0}mm`
+          `${pendingLayout.contentTopOffsetMm ?? 0}mm`,
         );
       }
 
@@ -156,7 +159,7 @@ export function createPreview(iframe) {
       const host = doc.getElementById('doc');
       if (!host) return;
 
-      const rawHtml = marked.parse(pendingMarkdown);
+      const rawHtml = /** @type {string} */ (marked.parse(pendingMarkdown));
       const sanitized = DOMPurify.sanitize(rawHtml, {
         USE_PROFILES: { html: true },
         RETURN_TRUSTED_TYPE: false,
@@ -174,7 +177,7 @@ export function createPreview(iframe) {
 
       const nodes = Array.from(wrapper.childNodes);
       const firstH1Index = nodes.findIndex(
-        (node) => node.nodeType === Node.ELEMENT_NODE && node.tagName?.toLowerCase() === 'h1'
+        (node) => node.nodeType === Node.ELEMENT_NODE && node.tagName?.toLowerCase() === 'h1',
       );
 
       const appendNode = (container, node) => {
@@ -271,7 +274,7 @@ export function createPreview(iframe) {
       columnsContainer.style.columnGap = 'var(--column-gap)';
       columnsContainer.style.setProperty(
         '--column-top-offset',
-        `${pendingLayout.contentTopOffsetMm ?? 0}mm`
+        `${pendingLayout.contentTopOffsetMm ?? 0}mm`,
       );
     }
     syncStyle(doc);

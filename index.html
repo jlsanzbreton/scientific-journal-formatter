@@ -1,289 +1,459 @@
 <!doctype html>
 <html lang="es">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Scientific Journal Formatter (v0.1.0)</title>
-  <meta name="description" content="Formatea texto científico con layouts por columnas y plantillas de revista. Incluye editor de plantillas (admin).">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <link rel="manifest" href="/scientific-journal-formatter/manifest.webmanifest">
-  <link rel="icon" href="/assets/icons/icon-32.png" sizes="32x32">
-  <link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
-  <meta name="theme-color" content="#1f1f1f">
-</head>
-<body class="theme-light">
-  <div class="app-shell">
-    <header class="app-header">
-      <div class="branding">
-        <span class="branding__mark" aria-hidden="true">
-          <img src="/assets/logo/sciform_symbol_512.png" alt="" loading="lazy">
-        </span>
-        <div class="branding__copy">
-          <p class="branding__kicker">Scientific Journal Formatter</p>
-          <h1 class="branding__title">SciForm — v0.1.0</h1>
-          <p class="branding__subtitle">Prepara tu artículo científico en minutos con plantillas editoriales, previsualización y herramientas de maquetación.</p>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Scientific Journal Formatter (v0.1.0)</title>
+    <meta
+      name="description"
+      content="Formatea texto científico con layouts por columnas y plantillas de revista. Incluye editor de plantillas (admin)."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Inter:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="manifest" href="/scientific-journal-formatter/manifest.webmanifest" />
+    <link rel="icon" href="/assets/icons/icon-32.png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/assets/icons/icon-192.png" />
+    <meta name="theme-color" content="#1f1f1f" />
+  </head>
+  <body class="theme-light">
+    <div class="app-shell">
+      <header class="app-header">
+        <div class="branding">
+          <span class="branding__mark" aria-hidden="true">
+            <img src="/assets/logo/sciform_symbol_512.png" alt="" loading="lazy" />
+          </span>
+          <div class="branding__copy">
+            <p class="branding__kicker">Scientific Journal Formatter</p>
+            <h1 class="branding__title">SciForm — v0.1.0</h1>
+            <p class="branding__subtitle">
+              Prepara tu artículo científico en minutos con plantillas editoriales, previsualización
+              y herramientas de maquetación.
+            </p>
+          </div>
         </div>
-      </div>
-      <div class="header-actions">
-        <button id="themeToggle" class="button button--ghost" type="button" aria-pressed="false" data-tooltip="Activa el modo oscuro para revisar pruebas en condiciones de baja luz.">
-          <span data-icon="moon" aria-hidden="true"></span>
-          <span class="button__label">Modo oscuro</span>
-        </button>
-        <label class="admin-toggle" data-tooltip="Gestiona plantillas: crea, edita, exporta o restaura.">
-          <input id="adminToggle" type="checkbox">
-          <span>Modo Admin</span>
-        </label>
-        <button id="installBtn" class="button button--ghost" type="button" hidden data-tooltip="Instala SciForm como aplicación para trabajar sin navegador.">
-          <span data-icon="download" aria-hidden="true"></span>
-          <span class="button__label">Instalar PWA</span>
-        </button>
-      </div>
-    </header>
+        <div class="header-actions">
+          <button
+            id="themeToggle"
+            class="button button--ghost"
+            type="button"
+            aria-pressed="false"
+            data-tooltip="Activa el modo oscuro para revisar pruebas en condiciones de baja luz."
+          >
+            <span data-icon="moon" aria-hidden="true"></span>
+            <span class="button__label">Modo oscuro</span>
+          </button>
+          <label
+            class="admin-toggle"
+            data-tooltip="Gestiona plantillas: crea, edita, exporta o restaura."
+          >
+            <input id="adminToggle" type="checkbox" />
+            <span>Modo Admin</span>
+          </label>
+          <button
+            id="installBtn"
+            class="button button--ghost"
+            type="button"
+            hidden
+            data-tooltip="Instala SciForm como aplicación para trabajar sin navegador."
+          >
+            <span data-icon="download" aria-hidden="true"></span>
+            <span class="button__label">Instalar PWA</span>
+          </button>
+        </div>
+      </header>
 
-    <main class="app-main">
-      <nav class="breadcrumbs" aria-label="Progreso">
-        <ol>
-          <li><span data-icon="document" aria-hidden="true"></span>Importar</li>
-          <li aria-current="page"><span data-icon="layout" aria-hidden="true"></span>Diseñar</li>
-          <li><span data-icon="preview" aria-hidden="true"></span>Revisar</li>
-          <li><span data-icon="share" aria-hidden="true"></span>Entregar</li>
-        </ol>
-      </nav>
+      <main class="app-main">
+        <nav class="breadcrumbs" aria-label="Progreso">
+          <ol>
+            <li><span data-icon="document" aria-hidden="true"></span>Importar</li>
+            <li aria-current="page"><span data-icon="layout" aria-hidden="true"></span>Diseñar</li>
+            <li><span data-icon="preview" aria-hidden="true"></span>Revisar</li>
+            <li><span data-icon="share" aria-hidden="true"></span>Entregar</li>
+          </ol>
+        </nav>
 
-      <section class="panel-grid">
-        <article class="panel panel--import">
-          <header class="panel__header">
-            <h2><span data-icon="upload" aria-hidden="true"></span>1 · Importar</h2>
-            <p class="panel__hint">Sube un archivo Markdown, TXT o RTF para comenzar.</p>
-          </header>
-          <div class="panel__body">
-            <label class="field">
-              <span class="field__label">Documento original</span>
-              <input id="fileInput" type="file" accept=".txt,.md,.rtf" class="field__input">
-            </label>
-            <button id="pasteBtn" class="button button--primary button--full" type="button" data-tooltip="Lee desde el portapapeles y pega en el editor.">
-              <span data-icon="clipboard" aria-hidden="true"></span>
-              Pegar desde portapapeles
-            </button>
-            <div class="field-group">
+        <section class="panel-grid">
+          <article class="panel panel--import">
+            <header class="panel__header">
+              <h2><span data-icon="upload" aria-hidden="true"></span>1 · Importar</h2>
+              <p class="panel__hint">Sube un archivo Markdown, TXT o RTF para comenzar.</p>
+            </header>
+            <div class="panel__body">
               <label class="field">
-                <span class="field__label">Imágenes (.png / .jpg)</span>
-                <input id="imgInput" type="file" accept="image/png,image/jpeg" multiple class="field__input">
+                <span class="field__label">Documento original</span>
+                <input id="fileInput" type="file" accept=".txt,.md,.rtf" class="field__input" />
               </label>
-              <p class="field__help">Inserta las imágenes con el botón “+ Imagen” bajo el editor.</p>
-            </div>
-          </div>
-        </article>
-
-        <article class="panel panel--layout">
-          <header class="panel__header">
-            <h2><span data-icon="grid" aria-hidden="true"></span>2 · Diseño</h2>
-            <p class="panel__hint">Ajusta columnas, tipografías y tamaño base.</p>
-          </header>
-          <div class="panel__body panel__body--grid">
-            <label class="field">
-              <span class="field__label">Columnas</span>
-              <select id="columns" class="field__input">
-                <option value="1">1</option>
-                <option value="2" selected>2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-              </select>
-            </label>
-            <label class="field">
-              <span class="field__label">Tipografía</span>
-              <select id="fontFamily" class="field__input">
-                <option value="Inter, system-ui, sans-serif">Inter</option>
-                <option value="Merriweather, serif">Merriweather</option>
-                <option value="Georgia, serif">Georgia</option>
-                <option value="Times New Roman, Times, serif">Times New Roman</option>
-                <option value="Garamond, serif">Garamond</option>
-                <option value="Helvetica, Arial, sans-serif">Helvetica / Arial</option>
-              </select>
-            </label>
-            <label class="field">
-              <span class="field__label">Tamaño base (px)</span>
-              <input id="baseSize" type="number" min="10" max="20" step="1" value="12" class="field__input">
-            </label>
-            <div class="field field--inline">
-              <div class="field">
-                <span class="field__label">Offset superior (mm)</span>
-                <input id="topOffsetRange" type="range" min="0" max="80" value="0" class="field__input field__input--range">
-              </div>
-              <div class="field">
-                <span class="field__label sr-only">Offset superior numérico</span>
-                <input id="topOffsetNumber" type="number" min="0" max="80" step="1" value="0" class="field__input">
+              <button
+                id="pasteBtn"
+                class="button button--primary button--full"
+                type="button"
+                data-tooltip="Lee desde el portapapeles y pega en el editor."
+              >
+                <span data-icon="clipboard" aria-hidden="true"></span>
+                Pegar desde portapapeles
+              </button>
+              <div class="field-group">
+                <label class="field">
+                  <span class="field__label">Imágenes (.png / .jpg)</span>
+                  <input
+                    id="imgInput"
+                    type="file"
+                    accept="image/png,image/jpeg"
+                    multiple
+                    class="field__input"
+                  />
+                </label>
+                <p class="field__help">
+                  Inserta las imágenes con el botón “+ Imagen” bajo el editor.
+                </p>
               </div>
             </div>
-            <label class="field">
-              <span class="field__label">Formato de salida</span>
-              <select id="pageSize" class="field__input">
-                <option value="A4" selected>A4</option>
-                <option value="Letter">Letter</option>
-              </select>
-            </label>
-            <label class="field tooltip-anchor" data-tooltip="Este valor se utiliza para los informes automáticos de longitud (próximamente).">
-              <span class="field__label">Nº máx. de páginas</span>
-              <input id="maxPages" type="number" min="1" step="1" value="12" class="field__input">
-            </label>
-          </div>
-        </article>
+          </article>
 
-        <article class="panel panel--templates">
+          <article class="panel panel--layout">
+            <header class="panel__header">
+              <h2><span data-icon="grid" aria-hidden="true"></span>2 · Diseño</h2>
+              <p class="panel__hint">Ajusta columnas, tipografías y tamaño base.</p>
+            </header>
+            <div class="panel__body panel__body--grid">
+              <label class="field">
+                <span class="field__label">Columnas</span>
+                <select id="columns" class="field__input">
+                  <option value="1">1</option>
+                  <option value="2" selected>2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                </select>
+              </label>
+              <label class="field">
+                <span class="field__label">Tipografía</span>
+                <select id="fontFamily" class="field__input">
+                  <option value="Inter, system-ui, sans-serif">Inter</option>
+                  <option value="Merriweather, serif">Merriweather</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, Times, serif">Times New Roman</option>
+                  <option value="Garamond, serif">Garamond</option>
+                  <option value="Helvetica, Arial, sans-serif">Helvetica / Arial</option>
+                </select>
+              </label>
+              <label class="field">
+                <span class="field__label">Tamaño base (px)</span>
+                <input
+                  id="baseSize"
+                  type="number"
+                  min="10"
+                  max="20"
+                  step="1"
+                  value="12"
+                  class="field__input"
+                />
+              </label>
+              <div class="field field--inline">
+                <div class="field">
+                  <span class="field__label">Offset superior (mm)</span>
+                  <input
+                    id="topOffsetRange"
+                    type="range"
+                    min="0"
+                    max="80"
+                    value="0"
+                    class="field__input field__input--range"
+                  />
+                </div>
+                <div class="field">
+                  <span class="field__label sr-only">Offset superior numérico</span>
+                  <input
+                    id="topOffsetNumber"
+                    type="number"
+                    min="0"
+                    max="80"
+                    step="1"
+                    value="0"
+                    class="field__input"
+                  />
+                </div>
+              </div>
+              <label class="field">
+                <span class="field__label">Formato de salida</span>
+                <select id="pageSize" class="field__input">
+                  <option value="A4" selected>A4</option>
+                  <option value="Letter">Letter</option>
+                </select>
+              </label>
+              <label
+                class="field tooltip-anchor"
+                data-tooltip="Este valor se utiliza para los informes automáticos de longitud (próximamente)."
+              >
+                <span class="field__label">Nº máx. de páginas</span>
+                <input
+                  id="maxPages"
+                  type="number"
+                  min="1"
+                  step="1"
+                  value="12"
+                  class="field__input"
+                />
+              </label>
+            </div>
+          </article>
+
+          <article class="panel panel--templates">
+            <header class="panel__header">
+              <h2><span data-icon="layers" aria-hidden="true"></span>3 · Plantillas</h2>
+              <p class="panel__hint">Aplica estilos editoriales listos para envío.</p>
+            </header>
+            <div class="panel__body">
+              <div class="field field--inline">
+                <label class="field__label" for="templateSelect">Seleccionar plantilla</label>
+                <div class="field__control">
+                  <select id="templateSelect" class="field__input"></select>
+                  <button id="applyTemplate" class="button button--accent" type="button">
+                    <span data-icon="spark" aria-hidden="true"></span>
+                    Aplicar
+                  </button>
+                </div>
+              </div>
+              <div class="button-bar">
+                <button
+                  id="importTemplates"
+                  class="button button--ghost"
+                  type="button"
+                  data-tooltip="Importa un archivo JSON exportado desde otra instancia."
+                >
+                  <span data-icon="import" aria-hidden="true"></span>
+                  Importar JSON
+                </button>
+                <button
+                  id="exportTemplates"
+                  class="button button--ghost"
+                  type="button"
+                  data-tooltip="Exporta tus plantillas personalizadas."
+                >
+                  <span data-icon="export" aria-hidden="true"></span>
+                  Exportar JSON
+                </button>
+                <button
+                  id="resetTemplates"
+                  class="button button--ghost"
+                  type="button"
+                  data-tooltip="Restaura las plantillas originales de SciForm."
+                >
+                  <span data-icon="refresh" aria-hidden="true"></span>
+                  Restaurar
+                </button>
+              </div>
+
+              <div id="adminPanel" class="admin-panel" hidden>
+                <div class="admin-panel__header">
+                  <h3>Editor de plantillas (Admin)</h3>
+                  <button id="newTemplate" class="button button--minimal" type="button">
+                    <span data-icon="plus" aria-hidden="true"></span>
+                    Nueva
+                  </button>
+                </div>
+                <div class="admin-panel__grid">
+                  <label class="field">
+                    <span class="field__label">Clave</span>
+                    <input id="tplKey" class="field__input" placeholder="geologica_acta_2025" />
+                  </label>
+                  <label class="field">
+                    <span class="field__label">Nombre visible</span>
+                    <input id="tplName" class="field__input" placeholder="Geologica Acta — 2025" />
+                  </label>
+                  <label class="field">
+                    <span class="field__label">Columnas</span>
+                    <input
+                      id="tplColumns"
+                      type="number"
+                      min="1"
+                      max="4"
+                      value="2"
+                      class="field__input"
+                    />
+                  </label>
+                  <label class="field">
+                    <span class="field__label">Font family</span>
+                    <input id="tplFont" class="field__input" placeholder="Merriweather, serif" />
+                  </label>
+                  <label class="field">
+                    <span class="field__label">Base (px)</span>
+                    <input id="tplBase" type="number" value="12" class="field__input" />
+                  </label>
+                  <label class="field">
+                    <span class="field__label">Page size</span>
+                    <select id="tplPage" class="field__input">
+                      <option value="A4">A4</option>
+                      <option value="Letter">Letter</option>
+                    </select>
+                  </label>
+                  <label class="field">
+                    <span class="field__label">Offset superior (mm)</span>
+                    <input
+                      id="tplContentOffset"
+                      type="number"
+                      min="0"
+                      step="1"
+                      class="field__input"
+                      placeholder="30"
+                    />
+                  </label>
+                  <label class="field">
+                    <span class="field__label">Máx. páginas</span>
+                    <input
+                      id="tplMaxPages"
+                      type="number"
+                      min="1"
+                      step="1"
+                      class="field__input"
+                      placeholder="6"
+                    />
+                  </label>
+                  <label class="field field--full">
+                    <span class="field__label">Márgenes (mm)</span>
+                    <input id="tplMargins" class="field__input" placeholder="18, 18, 18, 18" />
+                  </label>
+                  <label class="field field--full">
+                    <span class="field__label">Reglas de títulos (JSON)</span>
+                    <textarea
+                      id="tplHeadings"
+                      class="field__input field__input--textarea"
+                      placeholder='{"h1":{"size":"1.6em","weight":700},"h2":{"size":"1.3em","weight":600}}'
+                    ></textarea>
+                  </label>
+                  <label class="field field--full">
+                    <span class="field__label">Estilos de figura (JSON)</span>
+                    <textarea
+                      id="tplFigure"
+                      class="field__input field__input--textarea"
+                      placeholder='{"captionSize":"0.9em","captionColor":"#555","span":"auto"}'
+                    ></textarea>
+                  </label>
+                </div>
+                <div class="button-bar button-bar--end">
+                  <button id="saveTemplate" class="button button--primary" type="button">
+                    <span data-icon="save" aria-hidden="true"></span>
+                    Guardar
+                  </button>
+                  <button id="deleteTemplate" class="button button--ghost" type="button">
+                    <span data-icon="trash" aria-hidden="true"></span>
+                    Eliminar
+                  </button>
+                  <button
+                    id="aiSuggest"
+                    class="button button--minimal"
+                    type="button"
+                    data-tooltip="Conecta tu servicio favorito para sugerir estilos (API pendiente)."
+                  >
+                    <span data-icon="spark" aria-hidden="true"></span>
+                    AI: Sugerir (stub)
+                  </button>
+                </div>
+                <p class="admin-panel__note">
+                  Nota: “AI: Sugerir” es un stub. Podrás conectar una API para inferir estilos a
+                  partir de una guía o PDF.
+                </p>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section class="workspace">
+          <article class="workspace__editor">
+            <header class="workspace__header">
+              <h2><span data-icon="edit" aria-hidden="true"></span>Editor Markdown</h2>
+              <div class="workspace__toolbar">
+                <button
+                  id="insertImageBtn"
+                  class="button button--ghost"
+                  type="button"
+                  data-tooltip="Inserta una imagen subida, elige cuántas columnas debe ocupar y se añadirá el span automáticamente."
+                >
+                  <span data-icon="image" aria-hidden="true"></span>
+                  + Imagen
+                </button>
+                <button
+                  id="h1Btn"
+                  class="button button--ghost"
+                  type="button"
+                  data-tooltip="Aplica estilo H1 a la selección."
+                >
+                  H1
+                </button>
+                <button
+                  id="h2Btn"
+                  class="button button--ghost"
+                  type="button"
+                  data-tooltip="Aplica estilo H2 a la selección."
+                >
+                  H2
+                </button>
+                <button
+                  id="boldBtn"
+                  class="button button--ghost"
+                  type="button"
+                  data-tooltip="Resalta con negrita."
+                >
+                  Negrita
+                </button>
+                <button
+                  id="italicBtn"
+                  class="button button--ghost"
+                  type="button"
+                  data-tooltip="Aplica cursiva."
+                >
+                  Cursiva
+                </button>
+              </div>
+            </header>
+            <textarea
+              id="editor"
+              class="editor-textarea"
+              placeholder="# Título&#10;&#10;Escribe aquí en Markdown o pega tu texto..."
+            ></textarea>
+          </article>
+
+          <article class="workspace__preview">
+            <header class="workspace__header">
+              <h2><span data-icon="preview" aria-hidden="true"></span>Previsualización</h2>
+              <p class="workspace__hint">
+                El contenido se actualiza al escribir. Usa el modo oscuro para ver contraste.
+              </p>
+            </header>
+            <div id="previewHost" class="preview-host">
+              <iframe id="preview" title="Previsualización" loading="lazy"></iframe>
+            </div>
+          </article>
+        </section>
+
+        <section class="panel panel--references">
           <header class="panel__header">
-            <h2><span data-icon="layers" aria-hidden="true"></span>3 · Plantillas</h2>
-            <p class="panel__hint">Aplica estilos editoriales listos para envío.</p>
+            <h2><span data-icon="bookmark" aria-hidden="true"></span>Referencias (BibTeX)</h2>
+            <p class="panel__hint">
+              Añade tus citas opcionalmente para mantenerlas junto al manuscrito.
+            </p>
           </header>
           <div class="panel__body">
-            <div class="field field--inline">
-              <label class="field__label" for="templateSelect">Seleccionar plantilla</label>
-              <div class="field__control">
-                <select id="templateSelect" class="field__input"></select>
-                <button id="applyTemplate" class="button button--accent" type="button">
-                  <span data-icon="spark" aria-hidden="true"></span>
-                  Aplicar
-                </button>
-              </div>
-            </div>
-            <div class="button-bar">
-              <button id="importTemplates" class="button button--ghost" type="button" data-tooltip="Importa un archivo JSON exportado desde otra instancia.">
-                <span data-icon="import" aria-hidden="true"></span>
-                Importar JSON
-              </button>
-              <button id="exportTemplates" class="button button--ghost" type="button" data-tooltip="Exporta tus plantillas personalizadas.">
-                <span data-icon="export" aria-hidden="true"></span>
-                Exportar JSON
-              </button>
-              <button id="resetTemplates" class="button button--ghost" type="button" data-tooltip="Restaura las plantillas originales de SciForm.">
-                <span data-icon="refresh" aria-hidden="true"></span>
-                Restaurar
-              </button>
-            </div>
-
-            <div id="adminPanel" class="admin-panel" hidden>
-              <div class="admin-panel__header">
-                <h3>Editor de plantillas (Admin)</h3>
-                <button id="newTemplate" class="button button--minimal" type="button">
-                  <span data-icon="plus" aria-hidden="true"></span>
-                  Nueva
-                </button>
-              </div>
-              <div class="admin-panel__grid">
-                <label class="field">
-                  <span class="field__label">Clave</span>
-                  <input id="tplKey" class="field__input" placeholder="geologica_acta_2025">
-                </label>
-                <label class="field">
-                  <span class="field__label">Nombre visible</span>
-                  <input id="tplName" class="field__input" placeholder="Geologica Acta — 2025">
-                </label>
-                <label class="field">
-                  <span class="field__label">Columnas</span>
-                  <input id="tplColumns" type="number" min="1" max="4" value="2" class="field__input">
-                </label>
-                <label class="field">
-                  <span class="field__label">Font family</span>
-                  <input id="tplFont" class="field__input" placeholder="Merriweather, serif">
-                </label>
-                <label class="field">
-                  <span class="field__label">Base (px)</span>
-                  <input id="tplBase" type="number" value="12" class="field__input">
-                </label>
-                <label class="field">
-                  <span class="field__label">Page size</span>
-                  <select id="tplPage" class="field__input">
-                    <option value="A4">A4</option>
-                    <option value="Letter">Letter</option>
-                  </select>
-                </label>
-                <label class="field">
-                  <span class="field__label">Offset superior (mm)</span>
-                  <input id="tplContentOffset" type="number" min="0" step="1" class="field__input" placeholder="30">
-                </label>
-                <label class="field">
-                  <span class="field__label">Máx. páginas</span>
-                  <input id="tplMaxPages" type="number" min="1" step="1" class="field__input" placeholder="6">
-                </label>
-                <label class="field field--full">
-                  <span class="field__label">Márgenes (mm)</span>
-                  <input id="tplMargins" class="field__input" placeholder="18, 18, 18, 18">
-                </label>
-                <label class="field field--full">
-                  <span class="field__label">Reglas de títulos (JSON)</span>
-                  <textarea id="tplHeadings" class="field__input field__input--textarea" placeholder='{"h1":{"size":"1.6em","weight":700},"h2":{"size":"1.3em","weight":600}}'></textarea>
-                </label>
-                <label class="field field--full">
-                  <span class="field__label">Estilos de figura (JSON)</span>
-                  <textarea id="tplFigure" class="field__input field__input--textarea" placeholder='{"captionSize":"0.9em","captionColor":"#555","span":"auto"}'></textarea>
-                </label>
-              </div>
-              <div class="button-bar button-bar--end">
-                <button id="saveTemplate" class="button button--primary" type="button">
-                  <span data-icon="save" aria-hidden="true"></span>
-                  Guardar
-                </button>
-                <button id="deleteTemplate" class="button button--ghost" type="button">
-                  <span data-icon="trash" aria-hidden="true"></span>
-                  Eliminar
-                </button>
-                <button id="aiSuggest" class="button button--minimal" type="button" data-tooltip="Conecta tu servicio favorito para sugerir estilos (API pendiente).">
-                  <span data-icon="spark" aria-hidden="true"></span>
-                  AI: Sugerir (stub)
-                </button>
-              </div>
-              <p class="admin-panel__note">Nota: “AI: Sugerir” es un stub. Podrás conectar una API para inferir estilos a partir de una guía o PDF.</p>
-            </div>
+            <textarea
+              id="bibtex"
+              class="editor-textarea editor-textarea--compact"
+              placeholder="@article{garcia2023,...}"
+            ></textarea>
           </div>
-        </article>
-      </section>
+        </section>
+      </main>
 
-      <section class="workspace">
-        <article class="workspace__editor">
-          <header class="workspace__header">
-            <h2><span data-icon="edit" aria-hidden="true"></span>Editor Markdown</h2>
-            <div class="workspace__toolbar">
-              <button id="insertImageBtn" class="button button--ghost" type="button" data-tooltip="Inserta una imagen subida, elige cuántas columnas debe ocupar y se añadirá el span automáticamente.">
-                <span data-icon="image" aria-hidden="true"></span>
-                + Imagen
-              </button>
-              <button id="h1Btn" class="button button--ghost" type="button" data-tooltip="Aplica estilo H1 a la selección.">H1</button>
-              <button id="h2Btn" class="button button--ghost" type="button" data-tooltip="Aplica estilo H2 a la selección.">H2</button>
-              <button id="boldBtn" class="button button--ghost" type="button" data-tooltip="Resalta con negrita.">Negrita</button>
-              <button id="italicBtn" class="button button--ghost" type="button" data-tooltip="Aplica cursiva.">Cursiva</button>
-            </div>
-          </header>
-          <textarea id="editor" class="editor-textarea" placeholder="# Título&#10;&#10;Escribe aquí en Markdown o pega tu texto..."></textarea>
-        </article>
+      <footer class="app-footer">
+        <p>
+          Hecho con dedicación — SciForm funciona localmente; tus datos permanecen en tu navegador.
+          El modo Admin guarda plantillas en LocalStorage y permite importarlas/exportarlas.
+        </p>
+      </footer>
+    </div>
 
-        <article class="workspace__preview">
-          <header class="workspace__header">
-            <h2><span data-icon="preview" aria-hidden="true"></span>Previsualización</h2>
-            <p class="workspace__hint">El contenido se actualiza al escribir. Usa el modo oscuro para ver contraste.</p>
-          </header>
-          <div id="previewHost" class="preview-host">
-            <iframe id="preview" title="Previsualización" loading="lazy"></iframe>
-          </div>
-        </article>
-      </section>
-
-      <section class="panel panel--references">
-        <header class="panel__header">
-          <h2><span data-icon="bookmark" aria-hidden="true"></span>Referencias (BibTeX)</h2>
-          <p class="panel__hint">Añade tus citas opcionalmente para mantenerlas junto al manuscrito.</p>
-        </header>
-        <div class="panel__body">
-          <textarea id="bibtex" class="editor-textarea editor-textarea--compact" placeholder="@article{garcia2023,...}"></textarea>
-        </div>
-      </section>
-    </main>
-
-    <footer class="app-footer">
-      <p>Hecho con dedicación — SciForm funciona localmente; tus datos permanecen en tu navegador. El modo Admin guarda plantillas en LocalStorage y permite importarlas/exportarlas.</p>
-    </footer>
-  </div>
-
-  <script type="module" src="/src/main.js"></script>
-</body>
+    <script type="module" src="/src/main.js"></script>
+  </body>
 </html>

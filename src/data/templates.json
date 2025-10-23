@@ -5,12 +5,7 @@
     "fontFamily": "Merriweather, serif",
     "baseSizePx": 11,
     "pageSize": "A4",
-    "marginsMm": [
-      18,
-      18,
-      18,
-      18
-    ],
+    "marginsMm": [18, 18, 18, 18],
     "contentTopOffsetMm": 40,
     "maxPages": 6,
     "headings": {
@@ -39,12 +34,7 @@
     "fontFamily": "Georgia, serif",
     "baseSizePx": 10,
     "pageSize": "Letter",
-    "marginsMm": [
-      18,
-      18,
-      18,
-      18
-    ],
+    "marginsMm": [18, 18, 18, 18],
     "contentTopOffsetMm": 38,
     "maxPages": 6,
     "headings": {
@@ -69,12 +59,7 @@
     "fontFamily": "Inter, system-ui, sans-serif",
     "baseSizePx": 12,
     "pageSize": "A4",
-    "marginsMm": [
-      20,
-      16,
-      20,
-      16
-    ],
+    "marginsMm": [20, 16, 20, 16],
     "contentTopOffsetMm": 32,
     "maxPages": 8,
     "headings": {
@@ -103,12 +88,7 @@
     "fontFamily": "Times New Roman, Times, serif",
     "baseSizePx": 10,
     "pageSize": "A4",
-    "marginsMm": [
-      25,
-      20,
-      25,
-      20
-    ],
+    "marginsMm": [25, 20, 25, 20],
     "contentTopOffsetMm": 36,
     "maxPages": 10,
     "headings": {
@@ -140,12 +120,7 @@
     "fontFamily": "Times New Roman, Times, serif",
     "baseSizePx": 10,
     "pageSize": "A4",
-    "marginsMm": [
-      29,
-      18,
-      29,
-      18
-    ],
+    "marginsMm": [29, 18, 29, 18],
     "contentTopOffsetMm": 34,
     "maxPages": 4,
     "headings": {

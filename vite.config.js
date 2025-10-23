@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig } from 'vite';
 
 /**
  * Si publicas en GitHub Pages bajo:
@@ -7,11 +7,11 @@ import { defineConfig } from "vite";
  * Si usas dominio propio o Vercel/Netlify, cambia a base: '/'
  */
 export default defineConfig({
-  base: "/scientific-journal-formatter/",
+  base: '/scientific-journal-formatter/',
   server: { port: 5173, open: false },
   build: {
-    outDir: "dist",
-    assetsDir: "assets",
-    sourcemap: true
-  }
+    outDir: 'dist',
+    assetsDir: 'assets',
+    sourcemap: true,
+  },
 });

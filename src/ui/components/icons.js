@@ -167,13 +167,16 @@ const ICONS = {
   },
   bookmark: {
     viewBox: '0 0 24 24',
-    elements: [
-      { tag: 'path', attrs: { d: 'M6 4h12v16l-6-3-6 3z' } },
-    ],
+    elements: [{ tag: 'path', attrs: { d: 'M6 4h12v16l-6-3-6 3z' } }],
   },
 };
 
-export function createIcon(name, { className } = {}) {
+/**
+ * @param {string} name
+ * @param {{ className?: string }} [options]
+ */
+export function createIcon(name, options = {}) {
+  const { className } = options;
   const definition = ICONS[name];
   if (!definition) return null;
   const svg = document.createElementNS(SVG_NS, 'svg');

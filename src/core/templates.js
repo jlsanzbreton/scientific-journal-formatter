@@ -1,5 +1,6 @@
 import Ajv from 'ajv';
-import defaultTemplatesData from '../data/templates.json' assert { type: 'json' };
+
+import defaultTemplatesData from '../data/templates.json';
 
 const STORAGE_KEY = 'sjf.templates';
 const ajv = new Ajv({ allErrors: true, allowUnionTypes: true });
