@@ -139,6 +139,7 @@ export function createPreview(iframe) {
       if (columnsContainer) {
         columnsContainer.style.columnCount = String(pendingLayout.columns);
         columnsContainer.style.columnGap = 'var(--column-gap)';
+        columnsContainer.style.columnFill = 'balance';
         columnsContainer.style.setProperty(
           '--column-top-offset',
           `${pendingLayout.contentTopOffsetMm ?? 0}mm`,
@@ -179,6 +180,20 @@ export function createPreview(iframe) {
       const firstH1Index = nodes.findIndex(
         (node) => node.nodeType === Node.ELEMENT_NODE && node.tagName?.toLowerCase() === 'h1',
       );
+      const allowedFrontMatterTags = new Set(['p', 'hr', 'ul', 'ol', 'blockquote', 'figure']);
+      const frontMatterStopTags = new Set([
+        'h1',
+        'h2',
+        'h3',
+        'h4',
+        'h5',
+        'h6',
+        'section',
+        'table',
+        'article',
+        'main',
+        'aside',
+      ]);
 
       const appendNode = (container, node) => {
         if (node.nodeType === Node.TEXT_NODE && !node.textContent?.trim()) {
@@ -198,15 +213,20 @@ export function createPreview(iframe) {
           const node = nodes[i];
           if (node.nodeType === Node.ELEMENT_NODE) {
             const tag = node.tagName.toLowerCase();
-            if (tag === 'h2' || tag === 'hr' || tag === 'section' || tag === 'table') {
+            if (frontMatterStopTags.has(tag)) {
               cutoff = i;
               break;
             }
-            if (!['p', 'ul', 'ol', 'blockquote', 'figure'].includes(tag)) {
+            if (!allowedFrontMatterTags.has(tag)) {
               cutoff = i;
               break;
             }
-          } else if (node.nodeType !== Node.TEXT_NODE || node.textContent?.trim()) {
+          } else if (node.nodeType === Node.TEXT_NODE) {
+            if (node.textContent?.trim()) {
+              cutoff = i;
+              break;
+            }
+          } else {
             cutoff = i;
             break;
           }
@@ -272,6 +292,7 @@ export function createPreview(iframe) {
     if (columnsContainer) {
       columnsContainer.style.columnCount = String(pendingLayout.columns);
       columnsContainer.style.columnGap = 'var(--column-gap)';
+      columnsContainer.style.columnFill = 'balance';
       columnsContainer.style.setProperty(
         '--column-top-offset',
         `${pendingLayout.contentTopOffsetMm ?? 0}mm`,

@@ -28,7 +28,7 @@
   --column-gap: 2rem;
   --base-size: 12px;
   --font-family: Inter, system-ui, sans-serif;
-  --column-top-offset: 0;
+  --column-top-offset: 0mm;
 }
 
 .sr-only {
@@ -446,6 +446,21 @@ a {
   flex: 1 1 auto;
 }
 
+.field__control--column-offset {
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.field__control--column-offset .field__input--range {
+  flex: 1 1 auto;
+}
+
+.field__input--number {
+  flex: 0 0 88px;
+  text-align: right;
+  padding-right: 0.5rem;
+}
+
 .field-group {
   display: flex;
   flex-direction: column;
@@ -724,7 +739,7 @@ body.theme-dark [data-tooltip]::after {
   column-count: 2;
   column-gap: var(--column-gap);
   column-fill: balance;
-  margin-top: var(--column-top-offset, 0);
+  margin-top: var(--column-top-offset, 0mm);
 }
 
 .preview-columns h1,

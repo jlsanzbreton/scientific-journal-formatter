@@ -79,7 +79,7 @@ El usuario puede:
 
 scientific-journal-formatter/
 ├─ docs/
-│ └─ RFC-2025-0*.md # Guías de trabajo para Codex
+│ └─ RFC-2025-0\*.md # Guías de trabajo para Codex
 ├─ public/
 │ ├─ assets/
 │ │ ├─ icons/ # Salida de `npm run icons`

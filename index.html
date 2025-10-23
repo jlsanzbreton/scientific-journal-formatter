@@ -152,9 +152,9 @@
                   class="field__input"
                 />
               </label>
-              <div class="field field--inline">
-                <div class="field">
-                  <span class="field__label">Offset superior (mm)</span>
+              <div class="field">
+                <span class="field__label" id="topOffsetLabel">Inicio de columnas (mm)</span>
+                <div class="field__control field__control--column-offset">
                   <input
                     id="topOffsetRange"
                     type="range"
@@ -162,10 +162,8 @@
                     max="80"
                     value="0"
                     class="field__input field__input--range"
+                    aria-labelledby="topOffsetLabel"
                   />
-                </div>
-                <div class="field">
-                  <span class="field__label sr-only">Offset superior numérico</span>
                   <input
                     id="topOffsetNumber"
                     type="number"
@@ -173,7 +171,8 @@
                     max="80"
                     step="1"
                     value="0"
-                    class="field__input"
+                    class="field__input field__input--number"
+                    aria-label="Inicio de columnas (mm)"
                   />
                 </div>
               </div>
